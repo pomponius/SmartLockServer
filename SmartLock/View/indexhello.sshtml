@@ -1,0 +1,9 @@
+@Master['master.sshtml']
+
+@Section['Title']
+<title>Product App</title>
+@EndSection
+
+@Section['Content']
+   <h1> Hello @Model.Name! your age is @Model.Age </h1>
+@EndSection

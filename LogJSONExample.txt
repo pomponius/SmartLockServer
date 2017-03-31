@@ -1,0 +1,14 @@
+http://localhost:8000/SmartLockRESTService/data/?id=1
+GET -> ricevi users
+
+{"AllowedUsers":[{"CardID":"ABCDE","Expire":"31\/03\/2017 12:46:59","Pin":"12345"},{"CardID":null,"Expire":"01\/04\/2017 12:46:59","Pin":"67891"}]}
+
+POST -> carica log
+
+
+{"Log": [
+      {"Type": 2, "Text": "OK!", "DateTime": "27/03/2017 22:25:54"},
+      {"Type": 1, "Pin": "67891", "CardID": "BBBBB", "Text": "OK!", "DateTime": "27/03/2017 22:25:54"},
+      {"Type": 4, "Pin": "23456", "Text": "OK!", "DateTime": "27/03/2017 22:25:54"}
+    ]
+}
