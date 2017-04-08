@@ -28,11 +28,45 @@ namespace SmartLock
         public AllowedUsersForLocks GetAllowedUsers(string Id)
         {
 
+            //Check if ID is present
+            int parsedId = 0;
+            try
+            {
+                parsedId = Int32.Parse(Id);
+            }
+            catch
+            {
+                return null;
+            }
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetByID(parsedId).AsEnumerable();
+            if (myLockList == null)
+                return null;
+            if (myLockList.Count() == 0)
+                return null;
+
+            SmartLockDatabaseDataSet.Table_LocksRow myLock = myLockList.ElementAt(0);
+            myLocks.UpdateLockLastSeen(DateTime.Now, myLock.Id);
+            myLocks.Update(myDataSet.Table_Locks);
+
             List<UserForLock> myUserList = new List<UserForLock>();
-            myUserList.Add(new UserForLock { Pin = "12345", CardID = "ABCDE", Expire = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) });
-            myUserList.Add(new UserForLock { Pin = "67891", Expire = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) });
+
+            if (myLock.LockEnabled == 0)
+                return new AllowedUsersForLocks { AllowedUsers = myUserList };
+
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> allowedUsers = myUsers.GetAllowedUsers(DateTime.Now, parsedId).AsEnumerable();
+            if (allowedUsers == null)
+                return new AllowedUsersForLocks { AllowedUsers = myUserList };
+            if (allowedUsers.Count() == 0)
+                return new AllowedUsersForLocks { AllowedUsers = myUserList };
+
+
+            foreach (SmartLockDatabaseDataSet.Table_UserRow u in allowedUsers)
+            {
+                myUserList.Add(new UserForLock { Pin = u.UserPin, CardID = (u.UserCardEnable == 0) ? "N" : ((u.IsUserCardIDNull()) ? null : u.UserCardID), Expire = u.UserPinExpire.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) });
+            }
+
+
             AllowedUsersForLocks myAllowedUsers = new AllowedUsersForLocks { AllowedUsers = myUserList };
-            //myAllowedUsers.AllowedUsers.Add(new UserForLock { Pin = "67891", CardID = "FGHIL", Expire = DateTime.Now.AddDays(1) });
             return myAllowedUsers;
         }
 

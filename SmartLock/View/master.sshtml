@@ -1,8 +1,0 @@
-<html>
-<head>
-@Section['Title'];
-</head>
-<body>
-@Section['Content'];
-</body>
-</html>

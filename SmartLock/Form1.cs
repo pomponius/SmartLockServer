@@ -13,6 +13,7 @@ using Nancy.Hosting.Wcf;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Threading;
+using System.Globalization;
 
 namespace SmartLock
 {
@@ -53,6 +54,10 @@ namespace SmartLock
 
             newThread = new Thread(updateTextBoxWithLogs);
             newThread.Start();
+
+
+            textBox1.AppendText("("+DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) +") System Started!");
+            textBox1.AppendText(Environment.NewLine);
         }
 
         private void updateTextBoxWithLogs()
@@ -129,7 +134,7 @@ namespace SmartLock
         {
             // Determine if text has changed in the textbox by comparing to original text.
             // Display a MsgBox asking the user to save changes or abort.
-            if (MessageBox.Show("Are yo sure?", "SmartLock",
+            if (MessageBox.Show("Are you sure?", "SmartLock",
                 MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 // Cancel the Closing event from closing the form.
@@ -142,5 +147,39 @@ namespace SmartLock
            
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://localhost");
+        }
+
+
+        /*private void button1_Click(object sender, EventArgs e)
+        {
+
+            int ret = myAdmin.Insert("Marco", "Pomponio", "marco", "1234", DateTime.Now, "+393922334027", 0, Guid.NewGuid().ToString());
+
+
+            textBox1.AppendText(ret.ToString());
+            textBox1.AppendText(Environment.NewLine);
+        }*/
+
+        /*private void button2_Click(object sender, EventArgs e)
+        {
+            //EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myQuery = from admins in myAdmin.GetData()
+            //                                                                           where admins.AdminName == "Marco"
+            //                                                                           select admins;
+            //SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
+            //myAdmin.FillbyAdminFromLogin(myDataSet.Table_Admin, "admin", "pass");
+            foreach (SmartLockDatabaseDataSet.Table_AdminRow row in myAdmin.GetAdminFromLogin("admin", "pass").AsEnumerable())
+            {
+                textBox1.AppendText(row.AdminID.ToString() + " " + row.AdminPassword);
+                textBox1.AppendText(Environment.NewLine);
+            }
+        }*/
     }
 }

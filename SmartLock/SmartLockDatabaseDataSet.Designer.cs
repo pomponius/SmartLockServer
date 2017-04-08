@@ -32,6 +32,8 @@ namespace SmartLock {
         
         private Table_LocksDataTable tableTable_Locks;
         
+        private Table_PermissionsDataTable tableTable_Permissions;
+        
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -71,6 +73,9 @@ namespace SmartLock {
                 }
                 if ((ds.Tables["Table_Locks"] != null)) {
                     base.Tables.Add(new Table_LocksDataTable(ds.Tables["Table_Locks"]));
+                }
+                if ((ds.Tables["Table_Permissions"] != null)) {
+                    base.Tables.Add(new Table_PermissionsDataTable(ds.Tables["Table_Permissions"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -127,6 +132,16 @@ namespace SmartLock {
         public Table_LocksDataTable Table_Locks {
             get {
                 return this.tableTable_Locks;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public Table_PermissionsDataTable Table_Permissions {
+            get {
+                return this.tableTable_Permissions;
             }
         }
         
@@ -209,6 +224,9 @@ namespace SmartLock {
                 if ((ds.Tables["Table_Locks"] != null)) {
                     base.Tables.Add(new Table_LocksDataTable(ds.Tables["Table_Locks"]));
                 }
+                if ((ds.Tables["Table_Permissions"] != null)) {
+                    base.Tables.Add(new Table_PermissionsDataTable(ds.Tables["Table_Permissions"]));
+                }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
                 this.Namespace = ds.Namespace;
@@ -266,6 +284,12 @@ namespace SmartLock {
                     this.tableTable_Locks.InitVars();
                 }
             }
+            this.tableTable_Permissions = ((Table_PermissionsDataTable)(base.Tables["Table_Permissions"]));
+            if ((initTable == true)) {
+                if ((this.tableTable_Permissions != null)) {
+                    this.tableTable_Permissions.InitVars();
+                }
+            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -284,6 +308,8 @@ namespace SmartLock {
             base.Tables.Add(this.tableTable_User);
             this.tableTable_Locks = new Table_LocksDataTable();
             base.Tables.Add(this.tableTable_Locks);
+            this.tableTable_Permissions = new Table_PermissionsDataTable();
+            base.Tables.Add(this.tableTable_Permissions);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -307,6 +333,12 @@ namespace SmartLock {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private bool ShouldSerializeTable_Locks() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private bool ShouldSerializeTable_Permissions() {
             return false;
         }
         
@@ -376,6 +408,9 @@ namespace SmartLock {
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void Table_LocksRowChangeEventHandler(object sender, Table_LocksRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public delegate void Table_PermissionsRowChangeEventHandler(object sender, Table_PermissionsRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -1131,8 +1166,6 @@ namespace SmartLock {
             
             private global::System.Data.DataColumn columnUserCardEnable;
             
-            private global::System.Data.DataColumn columnUserAllowedLocks;
-            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public Table_UserDataTable() {
@@ -1312,14 +1345,6 @@ namespace SmartLock {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn UserAllowedLocksColumn {
-                get {
-                    return this.columnUserAllowedLocks;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1372,8 +1397,7 @@ namespace SmartLock {
                         System.DateTime UserPinExpire, 
                         System.DateTime UserRegistrationDate, 
                         System.DateTime UserLastAccess, 
-                        int UserCardEnable, 
-                        int UserAllowedLocks) {
+                        int UserCardEnable) {
                 Table_UserRow rowTable_UserRow = ((Table_UserRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -1393,8 +1417,7 @@ namespace SmartLock {
                         UserPinExpire,
                         UserRegistrationDate,
                         UserLastAccess,
-                        UserCardEnable,
-                        UserAllowedLocks};
+                        UserCardEnable};
                 rowTable_UserRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTable_UserRow);
                 return rowTable_UserRow;
@@ -1442,7 +1465,6 @@ namespace SmartLock {
                 this.columnUserRegistrationDate = base.Columns["UserRegistrationDate"];
                 this.columnUserLastAccess = base.Columns["UserLastAccess"];
                 this.columnUserCardEnable = base.Columns["UserCardEnable"];
-                this.columnUserAllowedLocks = base.Columns["UserAllowedLocks"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1484,8 +1506,6 @@ namespace SmartLock {
                 base.Columns.Add(this.columnUserLastAccess);
                 this.columnUserCardEnable = new global::System.Data.DataColumn("UserCardEnable", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnUserCardEnable);
-                this.columnUserAllowedLocks = new global::System.Data.DataColumn("UserAllowedLocks", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnUserAllowedLocks);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnUserID}, true));
                 this.columnUserID.AutoIncrement = true;
@@ -1514,7 +1534,6 @@ namespace SmartLock {
                 this.columnUserPinExpire.AllowDBNull = false;
                 this.columnUserRegistrationDate.AllowDBNull = false;
                 this.columnUserCardEnable.AllowDBNull = false;
-                this.columnUserAllowedLocks.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1937,6 +1956,298 @@ namespace SmartLock {
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
                 attribute2.FixedValue = "Table_LocksDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class Table_PermissionsDataTable : global::System.Data.TypedTableBase<Table_PermissionsRow> {
+            
+            private global::System.Data.DataColumn columnId;
+            
+            private global::System.Data.DataColumn columnUserID;
+            
+            private global::System.Data.DataColumn columnLockID;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsDataTable() {
+                this.TableName = "Table_Permissions";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal Table_PermissionsDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected Table_PermissionsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
+                get {
+                    return this.columnId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn UserIDColumn {
+                get {
+                    return this.columnUserID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn LockIDColumn {
+                get {
+                    return this.columnLockID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsRow this[int index] {
+                get {
+                    return ((Table_PermissionsRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event Table_PermissionsRowChangeEventHandler Table_PermissionsRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event Table_PermissionsRowChangeEventHandler Table_PermissionsRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event Table_PermissionsRowChangeEventHandler Table_PermissionsRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event Table_PermissionsRowChangeEventHandler Table_PermissionsRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void AddTable_PermissionsRow(Table_PermissionsRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsRow AddTable_PermissionsRow(int UserID, int LockID) {
+                Table_PermissionsRow rowTable_PermissionsRow = ((Table_PermissionsRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        null,
+                        UserID,
+                        LockID};
+                rowTable_PermissionsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowTable_PermissionsRow);
+                return rowTable_PermissionsRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsRow FindById(int Id) {
+                return ((Table_PermissionsRow)(this.Rows.Find(new object[] {
+                            Id})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                Table_PermissionsDataTable cln = ((Table_PermissionsDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new Table_PermissionsDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal void InitVars() {
+                this.columnId = base.Columns["Id"];
+                this.columnUserID = base.Columns["UserID"];
+                this.columnLockID = base.Columns["LockID"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitClass() {
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnId);
+                this.columnUserID = new global::System.Data.DataColumn("UserID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnUserID);
+                this.columnLockID = new global::System.Data.DataColumn("LockID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLockID);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnId}, true));
+                this.columnId.AutoIncrement = true;
+                this.columnId.AutoIncrementSeed = -1;
+                this.columnId.AutoIncrementStep = -1;
+                this.columnId.AllowDBNull = false;
+                this.columnId.ReadOnly = true;
+                this.columnId.Unique = true;
+                this.columnUserID.AllowDBNull = false;
+                this.columnLockID.AllowDBNull = false;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsRow NewTable_PermissionsRow() {
+                return ((Table_PermissionsRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new Table_PermissionsRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(Table_PermissionsRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.Table_PermissionsRowChanged != null)) {
+                    this.Table_PermissionsRowChanged(this, new Table_PermissionsRowChangeEvent(((Table_PermissionsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.Table_PermissionsRowChanging != null)) {
+                    this.Table_PermissionsRowChanging(this, new Table_PermissionsRowChangeEvent(((Table_PermissionsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.Table_PermissionsRowDeleted != null)) {
+                    this.Table_PermissionsRowDeleted(this, new Table_PermissionsRowChangeEvent(((Table_PermissionsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.Table_PermissionsRowDeleting != null)) {
+                    this.Table_PermissionsRowDeleting(this, new Table_PermissionsRowChangeEvent(((Table_PermissionsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void RemoveTable_PermissionsRow(Table_PermissionsRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                SmartLockDatabaseDataSet ds = new SmartLockDatabaseDataSet();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "Table_PermissionsDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -2420,17 +2731,6 @@ namespace SmartLock {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int UserAllowedLocks {
-                get {
-                    return ((int)(this[this.tableTable_User.UserAllowedLocksColumn]));
-                }
-                set {
-                    this[this.tableTable_User.UserAllowedLocksColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsUserAddressNull() {
                 return this.IsNull(this.tableTable_User.UserAddressColumn);
             }
@@ -2654,6 +2954,54 @@ namespace SmartLock {
         }
         
         /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class Table_PermissionsRow : global::System.Data.DataRow {
+            
+            private Table_PermissionsDataTable tableTable_Permissions;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal Table_PermissionsRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableTable_Permissions = ((Table_PermissionsDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Id {
+                get {
+                    return ((int)(this[this.tableTable_Permissions.IdColumn]));
+                }
+                set {
+                    this[this.tableTable_Permissions.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int UserID {
+                get {
+                    return ((int)(this[this.tableTable_Permissions.UserIDColumn]));
+                }
+                set {
+                    this[this.tableTable_Permissions.UserIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int LockID {
+                get {
+                    return ((int)(this[this.tableTable_Permissions.LockIDColumn]));
+                }
+                set {
+                    this[this.tableTable_Permissions.LockIDColumn] = value;
+                }
+            }
+        }
+        
+        /// <summary>
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -2775,6 +3123,40 @@ namespace SmartLock {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public Table_LocksRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public class Table_PermissionsRowChangeEvent : global::System.EventArgs {
+            
+            private Table_PermissionsRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsRowChangeEvent(Table_PermissionsRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public Table_PermissionsRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -3939,11 +4321,10 @@ SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log WHERE (LogID =
             tableMapping.ColumnMappings.Add("UserRegistrationDate", "UserRegistrationDate");
             tableMapping.ColumnMappings.Add("UserLastAccess", "UserLastAccess");
             tableMapping.ColumnMappings.Add("UserCardEnable", "UserCardEnable");
-            tableMapping.ColumnMappings.Add("UserAllowedLocks", "UserAllowedLocks");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [Table_User] WHERE (([UserID] = @Original_UserID) AND ([UserName] = @Original_UserName) AND ([UserSurname] = @Original_UserSurname) AND ((@IsNull_UserAddress = 1 AND [UserAddress] IS NULL) OR ([UserAddress] = @Original_UserAddress)) AND ((@IsNull_UserCity = 1 AND [UserCity] IS NULL) OR ([UserCity] = @Original_UserCity)) AND ((@IsNull_UserRegion = 1 AND [UserRegion] IS NULL) OR ([UserRegion] = @Original_UserRegion)) AND ((@IsNull_UserPostalCode = 1 AND [UserPostalCode] IS NULL) OR ([UserPostalCode] = @Original_UserPostalCode)) AND ((@IsNull_UserCountry = 1 AND [UserCountry] IS NULL) OR ([UserCountry] = @Original_UserCountry)) AND ((@IsNull_UserPhone = 1 AND [UserPhone] IS NULL) OR ([UserPhone] = @Original_UserPhone)) AND ([UserMail] = @Original_UserMail) AND ((@IsNull_UserCardType = 1 AND [UserCardType] IS NULL) OR ([UserCardType] = @Original_UserCardType)) AND ((@IsNull_UserCardID = 1 AND [UserCardID] IS NULL) OR ([UserCardID] = @Original_UserCardID)) AND ([UserPinStart] = @Original_UserPinStart) AND ([UserPin] = @Original_UserPin) AND ([UserPinExpire] = @Original_UserPinExpire) AND ([UserRegistrationDate] = @Original_UserRegistrationDate) AND ((@IsNull_UserLastAccess = 1 AND [UserLastAccess] IS NULL) OR ([UserLastAccess] = @Original_UserLastAccess)) AND ([UserCardEnable] = @Original_UserCardEnable) AND ([UserAllowedLocks] = @Original_UserAllowedLocks))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [Table_User] WHERE (([UserID] = @Original_UserID) AND ([UserName] = @Original_UserName) AND ([UserSurname] = @Original_UserSurname) AND ((@IsNull_UserAddress = 1 AND [UserAddress] IS NULL) OR ([UserAddress] = @Original_UserAddress)) AND ((@IsNull_UserCity = 1 AND [UserCity] IS NULL) OR ([UserCity] = @Original_UserCity)) AND ((@IsNull_UserRegion = 1 AND [UserRegion] IS NULL) OR ([UserRegion] = @Original_UserRegion)) AND ((@IsNull_UserPostalCode = 1 AND [UserPostalCode] IS NULL) OR ([UserPostalCode] = @Original_UserPostalCode)) AND ((@IsNull_UserCountry = 1 AND [UserCountry] IS NULL) OR ([UserCountry] = @Original_UserCountry)) AND ((@IsNull_UserPhone = 1 AND [UserPhone] IS NULL) OR ([UserPhone] = @Original_UserPhone)) AND ([UserMail] = @Original_UserMail) AND ((@IsNull_UserCardType = 1 AND [UserCardType] IS NULL) OR ([UserCardType] = @Original_UserCardType)) AND ((@IsNull_UserCardID = 1 AND [UserCardID] IS NULL) OR ([UserCardID] = @Original_UserCardID)) AND ([UserPinStart] = @Original_UserPinStart) AND ([UserPin] = @Original_UserPin) AND ([UserPinExpire] = @Original_UserPinExpire) AND ([UserRegistrationDate] = @Original_UserRegistrationDate) AND ((@IsNull_UserLastAccess = 1 AND [UserLastAccess] IS NULL) OR ([UserLastAccess] = @Original_UserLastAccess)) AND ([UserCardEnable] = @Original_UserCardEnable))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserName", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -3972,11 +4353,10 @@ SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log WHERE (LogID =
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_UserLastAccess", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserLastAccess", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserCardEnable", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardEnable", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserAllowedLocks", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserAllowedLocks", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [Table_User] ([UserName], [UserSurname], [UserAddress], [UserCity], [UserRegion], [UserPostalCode], [UserCountry], [UserPhone], [UserMail], [UserCardType], [UserCardID], [UserPinStart], [UserPin], [UserPinExpire], [UserRegistrationDate], [UserLastAccess], [UserCardEnable], [UserAllowedLocks]) VALUES (@UserName, @UserSurname, @UserAddress, @UserCity, @UserRegion, @UserPostalCode, @UserCountry, @UserPhone, @UserMail, @UserCardType, @UserCardID, @UserPinStart, @UserPin, @UserPinExpire, @UserRegistrationDate, @UserLastAccess, @UserCardEnable, @UserAllowedLocks);
-SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable, UserAllowedLocks FROM Table_User WHERE (UserID = SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [Table_User] ([UserName], [UserSurname], [UserAddress], [UserCity], [UserRegion], [UserPostalCode], [UserCountry], [UserPhone], [UserMail], [UserCardType], [UserCardID], [UserPinStart], [UserPin], [UserPinExpire], [UserRegistrationDate], [UserLastAccess], [UserCardEnable]) VALUES (@UserName, @UserSurname, @UserAddress, @UserCity, @UserRegion, @UserPostalCode, @UserCountry, @UserPhone, @UserMail, @UserCardType, @UserCardID, @UserPinStart, @UserPin, @UserPinExpire, @UserRegistrationDate, @UserLastAccess, @UserCardEnable);
+SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable FROM Table_User WHERE (UserID = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserSurname", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -3995,7 +4375,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserRegistrationDate", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserRegistrationDate", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserLastAccess", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardEnable", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardEnable", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserAllowedLocks", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserAllowedLocks", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
             this._adapter.UpdateCommand.CommandText = "UPDATE [Table_User] SET [UserName] = @UserName, [UserSurname] = @UserSurname, [Us" +
@@ -4004,29 +4383,27 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                 "UserPhone, [UserMail] = @UserMail, [UserCardType] = @UserCardType, [UserCardID] " +
                 "= @UserCardID, [UserPinStart] = @UserPinStart, [UserPin] = @UserPin, [UserPinExp" +
                 "ire] = @UserPinExpire, [UserRegistrationDate] = @UserRegistrationDate, [UserLast" +
-                "Access] = @UserLastAccess, [UserCardEnable] = @UserCardEnable, [UserAllowedLocks" +
-                "] = @UserAllowedLocks WHERE (([UserID] = @Original_UserID) AND ([UserName] = @Or" +
-                "iginal_UserName) AND ([UserSurname] = @Original_UserSurname) AND ((@IsNull_UserA" +
-                "ddress = 1 AND [UserAddress] IS NULL) OR ([UserAddress] = @Original_UserAddress)" +
-                ") AND ((@IsNull_UserCity = 1 AND [UserCity] IS NULL) OR ([UserCity] = @Original_" +
-                "UserCity)) AND ((@IsNull_UserRegion = 1 AND [UserRegion] IS NULL) OR ([UserRegio" +
-                "n] = @Original_UserRegion)) AND ((@IsNull_UserPostalCode = 1 AND [UserPostalCode" +
-                "] IS NULL) OR ([UserPostalCode] = @Original_UserPostalCode)) AND ((@IsNull_UserC" +
-                "ountry = 1 AND [UserCountry] IS NULL) OR ([UserCountry] = @Original_UserCountry)" +
-                ") AND ((@IsNull_UserPhone = 1 AND [UserPhone] IS NULL) OR ([UserPhone] = @Origin" +
-                "al_UserPhone)) AND ([UserMail] = @Original_UserMail) AND ((@IsNull_UserCardType " +
-                "= 1 AND [UserCardType] IS NULL) OR ([UserCardType] = @Original_UserCardType)) AN" +
-                "D ((@IsNull_UserCardID = 1 AND [UserCardID] IS NULL) OR ([UserCardID] = @Origina" +
-                "l_UserCardID)) AND ([UserPinStart] = @Original_UserPinStart) AND ([UserPin] = @O" +
-                "riginal_UserPin) AND ([UserPinExpire] = @Original_UserPinExpire) AND ([UserRegis" +
-                "trationDate] = @Original_UserRegistrationDate) AND ((@IsNull_UserLastAccess = 1 " +
-                "AND [UserLastAccess] IS NULL) OR ([UserLastAccess] = @Original_UserLastAccess)) " +
-                "AND ([UserCardEnable] = @Original_UserCardEnable) AND ([UserAllowedLocks] = @Ori" +
-                "ginal_UserAllowedLocks));\r\nSELECT UserID, UserName, UserSurname, UserAddress, Us" +
-                "erCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardTy" +
-                "pe, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, User" +
-                "LastAccess, UserCardEnable, UserAllowedLocks FROM Table_User WHERE (UserID = @Us" +
-                "erID)";
+                "Access] = @UserLastAccess, [UserCardEnable] = @UserCardEnable WHERE (([UserID] =" +
+                " @Original_UserID) AND ([UserName] = @Original_UserName) AND ([UserSurname] = @O" +
+                "riginal_UserSurname) AND ((@IsNull_UserAddress = 1 AND [UserAddress] IS NULL) OR" +
+                " ([UserAddress] = @Original_UserAddress)) AND ((@IsNull_UserCity = 1 AND [UserCi" +
+                "ty] IS NULL) OR ([UserCity] = @Original_UserCity)) AND ((@IsNull_UserRegion = 1 " +
+                "AND [UserRegion] IS NULL) OR ([UserRegion] = @Original_UserRegion)) AND ((@IsNul" +
+                "l_UserPostalCode = 1 AND [UserPostalCode] IS NULL) OR ([UserPostalCode] = @Origi" +
+                "nal_UserPostalCode)) AND ((@IsNull_UserCountry = 1 AND [UserCountry] IS NULL) OR" +
+                " ([UserCountry] = @Original_UserCountry)) AND ((@IsNull_UserPhone = 1 AND [UserP" +
+                "hone] IS NULL) OR ([UserPhone] = @Original_UserPhone)) AND ([UserMail] = @Origin" +
+                "al_UserMail) AND ((@IsNull_UserCardType = 1 AND [UserCardType] IS NULL) OR ([Use" +
+                "rCardType] = @Original_UserCardType)) AND ((@IsNull_UserCardID = 1 AND [UserCard" +
+                "ID] IS NULL) OR ([UserCardID] = @Original_UserCardID)) AND ([UserPinStart] = @Or" +
+                "iginal_UserPinStart) AND ([UserPin] = @Original_UserPin) AND ([UserPinExpire] = " +
+                "@Original_UserPinExpire) AND ([UserRegistrationDate] = @Original_UserRegistratio" +
+                "nDate) AND ((@IsNull_UserLastAccess = 1 AND [UserLastAccess] IS NULL) OR ([UserL" +
+                "astAccess] = @Original_UserLastAccess)) AND ([UserCardEnable] = @Original_UserCa" +
+                "rdEnable));\r\nSELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRe" +
+                "gion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID" +
+                ", UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, Us" +
+                "erCardEnable FROM Table_User WHERE (UserID = @UserID)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserSurname", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -4045,7 +4422,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserRegistrationDate", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserRegistrationDate", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserLastAccess", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardEnable", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardEnable", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserAllowedLocks", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserAllowedLocks", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserName", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserSurname", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserSurname", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -4073,7 +4449,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_UserLastAccess", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserLastAccess", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserCardEnable", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardEnable", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserAllowedLocks", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserAllowedLocks", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
@@ -4087,37 +4462,93 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[5];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[9];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable, UserAllowedLocks FROM Table_User";
+            this._commandCollection[0].CommandText = "SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPost" +
+                "alCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart" +
+                ", UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable F" +
+                "ROM Table_User";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = "SELECT        Table_User.*\r\nFROM            Table_User\r\nWHERE        (UserCardID " +
-                "= @cardId)";
+            this._commandCollection[1].CommandText = "DELETE FROM [Table_User] WHERE ([UserID] = @Original_UserID)";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@cardId", global::System.Data.SqlDbType.NVarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[2].Connection = this.Connection;
-            this._commandCollection[2].CommandText = "SELECT        Table_User.*\r\nFROM            Table_User\r\nWHERE        (UserPin = @" +
-                "pin)";
+            this._commandCollection[2].CommandText = @"SELECT        Table_User.*
+FROM            Table_User, Table_Permissions
+WHERE        (Table_User.UserID = Table_Permissions.UserID) AND (Table_User.UserPinStart < @DateTimeNow) AND (Table_User.UserPinExpire > @DateTimeNow) AND (Table_Permissions.LockID = @LockID)";
             this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@pin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@DateTimeNow", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserPinStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LockID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "LockID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[3] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[3].Connection = this.Connection;
-            this._commandCollection[3].CommandText = "UPDATE       Table_User\r\nSET                UserCardID = @UserCardID \r\nWHERE     " +
-                "   (UserPin=@UserPin)";
+            this._commandCollection[3].CommandText = @"SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable FROM Table_User WHERE (UserCardID = @cardId)";
             this._commandCollection[3].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardID", global::System.Data.SqlDbType.NVarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@cardId", global::System.Data.SqlDbType.NVarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[4] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[4].Connection = this.Connection;
-            this._commandCollection[4].CommandText = "UPDATE       Table_User\r\nSET                UserLastAccess = @Access\r\nWHERE      " +
-                "  (UserPin = @Pin); ";
+            this._commandCollection[4].CommandText = @"SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable FROM Table_User WHERE (UserPin = @pin)";
             this._commandCollection[4].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Access", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Pin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@pin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[5].Connection = this.Connection;
+            this._commandCollection[5].CommandText = @"INSERT INTO [Table_User] ([UserName], [UserSurname], [UserAddress], [UserCity], [UserRegion], [UserPostalCode], [UserCountry], [UserPhone], [UserMail], [UserCardType], [UserCardID], [UserPinStart], [UserPin], [UserPinExpire], [UserRegistrationDate], [UserLastAccess], [UserCardEnable]) VALUES (@UserName, @UserSurname, @UserAddress, @UserCity, @UserRegion, @UserPostalCode, @UserCountry, @UserPhone, @UserMail, @UserCardType, @UserCardID, @UserPinStart, @UserPin, @UserPinExpire, @UserRegistrationDate, @UserLastAccess, @UserCardEnable);
+SELECT @InsertedID = SCOPE_IDENTITY()";
+            this._commandCollection[5].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserName", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "UserName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserSurname", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "UserSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserAddress", global::System.Data.SqlDbType.NVarChar, 60, global::System.Data.ParameterDirection.Input, 0, 0, "UserAddress", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCity", global::System.Data.SqlDbType.NVarChar, 15, global::System.Data.ParameterDirection.Input, 0, 0, "UserCity", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserRegion", global::System.Data.SqlDbType.NVarChar, 15, global::System.Data.ParameterDirection.Input, 0, 0, "UserRegion", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPostalCode", global::System.Data.SqlDbType.NVarChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, "UserPostalCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCountry", global::System.Data.SqlDbType.NVarChar, 15, global::System.Data.ParameterDirection.Input, 0, 0, "UserCountry", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPhone", global::System.Data.SqlDbType.NVarChar, 24, global::System.Data.ParameterDirection.Input, 0, 0, "UserPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserMail", global::System.Data.SqlDbType.NVarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "UserMail", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardType", global::System.Data.SqlDbType.NVarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardType", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardID", global::System.Data.SqlDbType.NVarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPinStart", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserPinStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPinExpire", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserPinExpire", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserRegistrationDate", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserRegistrationDate", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserLastAccess", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardEnable", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardEnable", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@InsertedID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Output, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[6].Connection = this.Connection;
+            this._commandCollection[6].CommandText = "UPDATE       Table_User\r\nSET                UserCardID = @UserCardID \r\nWHERE     " +
+                "   (UserPin=@UserPin)";
+            this._commandCollection[6].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardID", global::System.Data.SqlDbType.NVarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[7] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[7].Connection = this.Connection;
+            this._commandCollection[7].CommandText = "UPDATE       Table_User\r\nSET                UserLastAccess = @Access\r\nWHERE      " +
+                "  (UserPin = @Pin); ";
+            this._commandCollection[7].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[7].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Access", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserLastAccess", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[7].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Pin", global::System.Data.SqlDbType.NChar, 5, global::System.Data.ParameterDirection.Input, 0, 0, "UserPin", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[8] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[8].Connection = this.Connection;
+            this._commandCollection[8].CommandText = @"UPDATE [Table_User] SET [UserName] = @UserName, [UserSurname] = @UserSurname, [UserAddress] = @UserAddress, [UserCity] = @UserCity, [UserRegion] = @UserRegion, [UserPostalCode] = @UserPostalCode, [UserCountry] = @UserCountry, [UserPhone] = @UserPhone, [UserMail] = @UserMail, [UserCardType] = @UserCardType, [UserCardID] = @UserCardID, [UserPinStart] = @UserPinStart, [UserPinExpire] = @UserPinExpire, [UserCardEnable] = @UserCardEnable WHERE ([UserID] = @Original_UserID)";
+            this._commandCollection[8].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserName", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "UserName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserSurname", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "UserSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserAddress", global::System.Data.SqlDbType.NVarChar, 60, global::System.Data.ParameterDirection.Input, 0, 0, "UserAddress", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCity", global::System.Data.SqlDbType.NVarChar, 15, global::System.Data.ParameterDirection.Input, 0, 0, "UserCity", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserRegion", global::System.Data.SqlDbType.NVarChar, 15, global::System.Data.ParameterDirection.Input, 0, 0, "UserRegion", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPostalCode", global::System.Data.SqlDbType.NVarChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, "UserPostalCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCountry", global::System.Data.SqlDbType.NVarChar, 15, global::System.Data.ParameterDirection.Input, 0, 0, "UserCountry", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPhone", global::System.Data.SqlDbType.NVarChar, 24, global::System.Data.ParameterDirection.Input, 0, 0, "UserPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserMail", global::System.Data.SqlDbType.NVarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "UserMail", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardType", global::System.Data.SqlDbType.NVarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardType", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardID", global::System.Data.SqlDbType.NVarChar, 20, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPinStart", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserPinStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserPinExpire", global::System.Data.SqlDbType.DateTime, 8, global::System.Data.ParameterDirection.Input, 0, 0, "UserPinExpire", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserCardEnable", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserCardEnable", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[8].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4148,8 +4579,36 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillByAllowedUsers(SmartLockDatabaseDataSet.Table_UserDataTable dataTable, System.DateTime DateTimeNow, int LockID) {
+            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((System.DateTime)(DateTimeNow));
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(LockID));
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual SmartLockDatabaseDataSet.Table_UserDataTable GetAllowedUsers(System.DateTime DateTimeNow, int LockID) {
+            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((System.DateTime)(DateTimeNow));
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(LockID));
+            SmartLockDatabaseDataSet.Table_UserDataTable dataTable = new SmartLockDatabaseDataSet.Table_UserDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
         public virtual int FillbyCardID(SmartLockDatabaseDataSet.Table_UserDataTable dataTable, string cardId) {
-            this.Adapter.SelectCommand = this.CommandCollection[1];
+            this.Adapter.SelectCommand = this.CommandCollection[3];
             if ((cardId == null)) {
                 this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -4168,7 +4627,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
         public virtual SmartLockDatabaseDataSet.Table_UserDataTable GetByCardID(string cardId) {
-            this.Adapter.SelectCommand = this.CommandCollection[1];
+            this.Adapter.SelectCommand = this.CommandCollection[3];
             if ((cardId == null)) {
                 this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -4185,7 +4644,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
         public virtual int FillbyPin(SmartLockDatabaseDataSet.Table_UserDataTable dataTable, string pin) {
-            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand = this.CommandCollection[4];
             if ((pin == null)) {
                 throw new global::System.ArgumentNullException("pin");
             }
@@ -4204,7 +4663,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
         public virtual SmartLockDatabaseDataSet.Table_UserDataTable GetByPin(string pin) {
-            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand = this.CommandCollection[4];
             if ((pin == null)) {
                 throw new global::System.ArgumentNullException("pin");
             }
@@ -4267,8 +4726,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                     System.DateTime Original_UserPinExpire, 
                     System.DateTime Original_UserRegistrationDate, 
                     global::System.Nullable<global::System.DateTime> Original_UserLastAccess, 
-                    int Original_UserCardEnable, 
-                    int Original_UserAllowedLocks) {
+                    int Original_UserCardEnable) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_UserID));
             if ((Original_UserName == null)) {
                 throw new global::System.ArgumentNullException("Original_UserName");
@@ -4370,7 +4828,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                 this.Adapter.DeleteCommand.Parameters[25].Value = global::System.DBNull.Value;
             }
             this.Adapter.DeleteCommand.Parameters[26].Value = ((int)(Original_UserCardEnable));
-            this.Adapter.DeleteCommand.Parameters[27].Value = ((int)(Original_UserAllowedLocks));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -4408,8 +4865,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                     System.DateTime UserPinExpire, 
                     System.DateTime UserRegistrationDate, 
                     global::System.Nullable<global::System.DateTime> UserLastAccess, 
-                    int UserCardEnable, 
-                    int UserAllowedLocks) {
+                    int UserCardEnable) {
             if ((UserName == null)) {
                 throw new global::System.ArgumentNullException("UserName");
             }
@@ -4492,7 +4948,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                 this.Adapter.InsertCommand.Parameters[15].Value = global::System.DBNull.Value;
             }
             this.Adapter.InsertCommand.Parameters[16].Value = ((int)(UserCardEnable));
-            this.Adapter.InsertCommand.Parameters[17].Value = ((int)(UserAllowedLocks));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -4531,7 +4986,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                     System.DateTime UserRegistrationDate, 
                     global::System.Nullable<global::System.DateTime> UserLastAccess, 
                     int UserCardEnable, 
-                    int UserAllowedLocks, 
                     int Original_UserID, 
                     string Original_UserName, 
                     string Original_UserSurname, 
@@ -4550,7 +5004,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                     System.DateTime Original_UserRegistrationDate, 
                     global::System.Nullable<global::System.DateTime> Original_UserLastAccess, 
                     int Original_UserCardEnable, 
-                    int Original_UserAllowedLocks, 
                     int UserID) {
             if ((UserName == null)) {
                 throw new global::System.ArgumentNullException("UserName");
@@ -4634,110 +5087,108 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                 this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
             }
             this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(UserCardEnable));
-            this.Adapter.UpdateCommand.Parameters[17].Value = ((int)(UserAllowedLocks));
-            this.Adapter.UpdateCommand.Parameters[18].Value = ((int)(Original_UserID));
+            this.Adapter.UpdateCommand.Parameters[17].Value = ((int)(Original_UserID));
             if ((Original_UserName == null)) {
                 throw new global::System.ArgumentNullException("Original_UserName");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((string)(Original_UserName));
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((string)(Original_UserName));
             }
             if ((Original_UserSurname == null)) {
                 throw new global::System.ArgumentNullException("Original_UserSurname");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[20].Value = ((string)(Original_UserSurname));
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((string)(Original_UserSurname));
             }
             if ((Original_UserAddress == null)) {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[22].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[21].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[22].Value = ((string)(Original_UserAddress));
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[21].Value = ((string)(Original_UserAddress));
             }
             if ((Original_UserCity == null)) {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[24].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[23].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[24].Value = ((string)(Original_UserCity));
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[23].Value = ((string)(Original_UserCity));
             }
             if ((Original_UserRegion == null)) {
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[26].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[25].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[25].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[26].Value = ((string)(Original_UserRegion));
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[25].Value = ((string)(Original_UserRegion));
             }
             if ((Original_UserPostalCode == null)) {
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[28].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[27].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[28].Value = ((string)(Original_UserPostalCode));
+                this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[27].Value = ((string)(Original_UserPostalCode));
             }
             if ((Original_UserCountry == null)) {
-                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[30].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[29].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[30].Value = ((string)(Original_UserCountry));
+                this.Adapter.UpdateCommand.Parameters[28].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[29].Value = ((string)(Original_UserCountry));
             }
             if ((Original_UserPhone == null)) {
-                this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[32].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[30].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[31].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[31].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[32].Value = ((string)(Original_UserPhone));
+                this.Adapter.UpdateCommand.Parameters[30].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[31].Value = ((string)(Original_UserPhone));
             }
             if ((Original_UserMail == null)) {
                 throw new global::System.ArgumentNullException("Original_UserMail");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[33].Value = ((string)(Original_UserMail));
+                this.Adapter.UpdateCommand.Parameters[32].Value = ((string)(Original_UserMail));
             }
             if ((Original_UserCardType == null)) {
-                this.Adapter.UpdateCommand.Parameters[34].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[35].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[34].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[34].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[35].Value = ((string)(Original_UserCardType));
+                this.Adapter.UpdateCommand.Parameters[33].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[34].Value = ((string)(Original_UserCardType));
             }
             if ((Original_UserCardID == null)) {
-                this.Adapter.UpdateCommand.Parameters[36].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[37].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[36].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[36].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[37].Value = ((string)(Original_UserCardID));
+                this.Adapter.UpdateCommand.Parameters[35].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[36].Value = ((string)(Original_UserCardID));
             }
-            this.Adapter.UpdateCommand.Parameters[38].Value = ((System.DateTime)(Original_UserPinStart));
+            this.Adapter.UpdateCommand.Parameters[37].Value = ((System.DateTime)(Original_UserPinStart));
             if ((Original_UserPin == null)) {
                 throw new global::System.ArgumentNullException("Original_UserPin");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[39].Value = ((string)(Original_UserPin));
+                this.Adapter.UpdateCommand.Parameters[38].Value = ((string)(Original_UserPin));
             }
-            this.Adapter.UpdateCommand.Parameters[40].Value = ((System.DateTime)(Original_UserPinExpire));
-            this.Adapter.UpdateCommand.Parameters[41].Value = ((System.DateTime)(Original_UserRegistrationDate));
+            this.Adapter.UpdateCommand.Parameters[39].Value = ((System.DateTime)(Original_UserPinExpire));
+            this.Adapter.UpdateCommand.Parameters[40].Value = ((System.DateTime)(Original_UserRegistrationDate));
             if ((Original_UserLastAccess.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[42].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[43].Value = ((System.DateTime)(Original_UserLastAccess.Value));
+                this.Adapter.UpdateCommand.Parameters[41].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[42].Value = ((System.DateTime)(Original_UserLastAccess.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[42].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[43].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[41].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[42].Value = global::System.DBNull.Value;
             }
-            this.Adapter.UpdateCommand.Parameters[44].Value = ((int)(Original_UserCardEnable));
-            this.Adapter.UpdateCommand.Parameters[45].Value = ((int)(Original_UserAllowedLocks));
-            this.Adapter.UpdateCommand.Parameters[46].Value = ((int)(UserID));
+            this.Adapter.UpdateCommand.Parameters[43].Value = ((int)(Original_UserCardEnable));
+            this.Adapter.UpdateCommand.Parameters[44].Value = ((int)(UserID));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -4776,7 +5227,6 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                     System.DateTime UserRegistrationDate, 
                     global::System.Nullable<global::System.DateTime> UserLastAccess, 
                     int UserCardEnable, 
-                    int UserAllowedLocks, 
                     int Original_UserID, 
                     string Original_UserName, 
                     string Original_UserSurname, 
@@ -4794,9 +5244,162 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
                     System.DateTime Original_UserPinExpire, 
                     System.DateTime Original_UserRegistrationDate, 
                     global::System.Nullable<global::System.DateTime> Original_UserLastAccess, 
-                    int Original_UserCardEnable, 
-                    int Original_UserAllowedLocks) {
-            return this.Update(UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable, UserAllowedLocks, Original_UserID, Original_UserName, Original_UserSurname, Original_UserAddress, Original_UserCity, Original_UserRegion, Original_UserPostalCode, Original_UserCountry, Original_UserPhone, Original_UserMail, Original_UserCardType, Original_UserCardID, Original_UserPinStart, Original_UserPin, Original_UserPinExpire, Original_UserRegistrationDate, Original_UserLastAccess, Original_UserCardEnable, Original_UserAllowedLocks, Original_UserID);
+                    int Original_UserCardEnable) {
+            return this.Update(UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPostalCode, UserCountry, UserPhone, UserMail, UserCardType, UserCardID, UserPinStart, UserPin, UserPinExpire, UserRegistrationDate, UserLastAccess, UserCardEnable, Original_UserID, Original_UserName, Original_UserSurname, Original_UserAddress, Original_UserCity, Original_UserRegion, Original_UserPostalCode, Original_UserCountry, Original_UserPhone, Original_UserMail, Original_UserCardType, Original_UserCardID, Original_UserPinStart, Original_UserPin, Original_UserPinExpire, Original_UserRegistrationDate, Original_UserLastAccess, Original_UserCardEnable, Original_UserID);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, false)]
+        public virtual int DeleteByUserID(int Original_UserID) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[1];
+            command.Parameters[0].Value = ((int)(Original_UserID));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, false)]
+        public virtual int InsertAndReturnID(
+                    string UserName, 
+                    string UserSurname, 
+                    string UserAddress, 
+                    string UserCity, 
+                    string UserRegion, 
+                    string UserPostalCode, 
+                    string UserCountry, 
+                    string UserPhone, 
+                    string UserMail, 
+                    string UserCardType, 
+                    string UserCardID, 
+                    System.DateTime UserPinStart, 
+                    string UserPin, 
+                    System.DateTime UserPinExpire, 
+                    System.DateTime UserRegistrationDate, 
+                    global::System.Nullable<global::System.DateTime> UserLastAccess, 
+                    int UserCardEnable, 
+                    out int InsertedID) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[5];
+            if ((UserName == null)) {
+                throw new global::System.ArgumentNullException("UserName");
+            }
+            else {
+                command.Parameters[0].Value = ((string)(UserName));
+            }
+            if ((UserSurname == null)) {
+                throw new global::System.ArgumentNullException("UserSurname");
+            }
+            else {
+                command.Parameters[1].Value = ((string)(UserSurname));
+            }
+            if ((UserAddress == null)) {
+                command.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[2].Value = ((string)(UserAddress));
+            }
+            if ((UserCity == null)) {
+                command.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[3].Value = ((string)(UserCity));
+            }
+            if ((UserRegion == null)) {
+                command.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[4].Value = ((string)(UserRegion));
+            }
+            if ((UserPostalCode == null)) {
+                command.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[5].Value = ((string)(UserPostalCode));
+            }
+            if ((UserCountry == null)) {
+                command.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[6].Value = ((string)(UserCountry));
+            }
+            if ((UserPhone == null)) {
+                command.Parameters[7].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[7].Value = ((string)(UserPhone));
+            }
+            if ((UserMail == null)) {
+                throw new global::System.ArgumentNullException("UserMail");
+            }
+            else {
+                command.Parameters[8].Value = ((string)(UserMail));
+            }
+            if ((UserCardType == null)) {
+                command.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[9].Value = ((string)(UserCardType));
+            }
+            if ((UserCardID == null)) {
+                command.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[10].Value = ((string)(UserCardID));
+            }
+            command.Parameters[11].Value = ((System.DateTime)(UserPinStart));
+            if ((UserPin == null)) {
+                throw new global::System.ArgumentNullException("UserPin");
+            }
+            else {
+                command.Parameters[12].Value = ((string)(UserPin));
+            }
+            command.Parameters[13].Value = ((System.DateTime)(UserPinExpire));
+            command.Parameters[14].Value = ((System.DateTime)(UserRegistrationDate));
+            if ((UserLastAccess.HasValue == true)) {
+                command.Parameters[15].Value = ((System.DateTime)(UserLastAccess.Value));
+            }
+            else {
+                command.Parameters[15].Value = global::System.DBNull.Value;
+            }
+            command.Parameters[16].Value = ((int)(UserCardEnable));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            if (((command.Parameters[17].Value == null) 
+                        || (command.Parameters[17].Value.GetType() == typeof(global::System.DBNull)))) {
+                throw new global::System.Data.StrongTypingException("Il valore del parametro \'InsertedID\' è DBNull.", null);
+            }
+            else {
+                InsertedID = ((int)(command.Parameters[17].Value));
+            }
+            return returnValue;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4804,7 +5407,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
         public virtual int UpdateCardIDbyPin(string UserCardID, string UserPin) {
-            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[3];
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[6];
             if ((UserCardID == null)) {
                 command.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -4839,7 +5442,7 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
         public virtual int UpdateLastAccessbyPin(global::System.Nullable<global::System.DateTime> Access, string Pin) {
-            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[4];
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[7];
             if ((Access.HasValue == true)) {
                 command.Parameters[0].Value = ((System.DateTime)(Access.Value));
             }
@@ -4852,6 +5455,99 @@ SELECT UserID, UserName, UserSurname, UserAddress, UserCity, UserRegion, UserPos
             else {
                 command.Parameters[1].Value = ((string)(Pin));
             }
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
+        public virtual int UpdateUser(string UserName, string UserSurname, string UserAddress, string UserCity, string UserRegion, string UserPostalCode, string UserCountry, string UserPhone, string UserMail, string UserCardType, string UserCardID, System.DateTime UserPinStart, System.DateTime UserPinExpire, int UserCardEnable, int Original_UserID) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[8];
+            if ((UserName == null)) {
+                throw new global::System.ArgumentNullException("UserName");
+            }
+            else {
+                command.Parameters[0].Value = ((string)(UserName));
+            }
+            if ((UserSurname == null)) {
+                throw new global::System.ArgumentNullException("UserSurname");
+            }
+            else {
+                command.Parameters[1].Value = ((string)(UserSurname));
+            }
+            if ((UserAddress == null)) {
+                command.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[2].Value = ((string)(UserAddress));
+            }
+            if ((UserCity == null)) {
+                command.Parameters[3].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[3].Value = ((string)(UserCity));
+            }
+            if ((UserRegion == null)) {
+                command.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[4].Value = ((string)(UserRegion));
+            }
+            if ((UserPostalCode == null)) {
+                command.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[5].Value = ((string)(UserPostalCode));
+            }
+            if ((UserCountry == null)) {
+                command.Parameters[6].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[6].Value = ((string)(UserCountry));
+            }
+            if ((UserPhone == null)) {
+                command.Parameters[7].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[7].Value = ((string)(UserPhone));
+            }
+            if ((UserMail == null)) {
+                throw new global::System.ArgumentNullException("UserMail");
+            }
+            else {
+                command.Parameters[8].Value = ((string)(UserMail));
+            }
+            if ((UserCardType == null)) {
+                command.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[9].Value = ((string)(UserCardType));
+            }
+            if ((UserCardID == null)) {
+                command.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                command.Parameters[10].Value = ((string)(UserCardID));
+            }
+            command.Parameters[11].Value = ((System.DateTime)(UserPinStart));
+            command.Parameters[12].Value = ((System.DateTime)(UserPinExpire));
+            command.Parameters[13].Value = ((int)(UserCardEnable));
+            command.Parameters[14].Value = ((int)(Original_UserID));
             global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
             if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -5325,6 +6021,379 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
     }
     
     /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class Table_PermissionsTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::System.Data.SqlClient.SqlDataAdapter _adapter;
+        
+        private global::System.Data.SqlClient.SqlConnection _connection;
+        
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
+        private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public Table_PermissionsTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::System.Data.SqlClient.SqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected global::System.Data.SqlClient.SqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitAdapter() {
+            this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "Table_Permissions";
+            tableMapping.ColumnMappings.Add("Id", "Id");
+            tableMapping.ColumnMappings.Add("UserID", "UserID");
+            tableMapping.ColumnMappings.Add("LockID", "LockID");
+            this._adapter.TableMappings.Add(tableMapping);
+            this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
+            this._adapter.DeleteCommand.Connection = this.Connection;
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[Table_Permissions] WHERE (([Id] = @Original_Id) AND ([UserID] " +
+                "= @Original_UserID) AND ([LockID] = @Original_LockID))";
+            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_LockID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LockID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
+            this._adapter.InsertCommand.Connection = this.Connection;
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[Table_Permissions] ([UserID], [LockID]) VALUES (@UserID, @Lock" +
+                "ID);\r\nSELECT Id, UserID, LockID FROM Table_Permissions WHERE (Id = SCOPE_IDENTIT" +
+                "Y())";
+            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LockID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LockID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
+            this._adapter.UpdateCommand.Connection = this.Connection;
+            this._adapter.UpdateCommand.CommandText = "UPDATE [dbo].[Table_Permissions] SET [UserID] = @UserID, [LockID] = @LockID WHERE" +
+                " (([Id] = @Original_Id) AND ([UserID] = @Original_UserID) AND ([LockID] = @Origi" +
+                "nal_LockID));\r\nSELECT Id, UserID, LockID FROM Table_Permissions WHERE (Id = @Id)" +
+                "";
+            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LockID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LockID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_UserID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_LockID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LockID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Id", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitConnection() {
+            this._connection = new global::System.Data.SqlClient.SqlConnection();
+            this._connection.ConnectionString = global::SmartLock.Properties.Settings.Default.SmartLockDatabaseConnectionString;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
+            this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = "SELECT Id, UserID, LockID FROM dbo.Table_Permissions";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = "DELETE FROM [dbo].[Table_Permissions] WHERE ([UserID] = @UserID)";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[2].Connection = this.Connection;
+            this._commandCollection[2].CommandText = "SELECT STUFF((SELECT \',\' + STR(LockID) FROM Table_Permissions WHERE UserID = @Use" +
+                "rID FOR XML PATH(\'\')), 1, 1, \'\' ) FROM Table_Permissions";
+            this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UserID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UserID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
+        public virtual int Fill(SmartLockDatabaseDataSet.Table_PermissionsDataTable dataTable) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual SmartLockDatabaseDataSet.Table_PermissionsDataTable GetData() {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            SmartLockDatabaseDataSet.Table_PermissionsDataTable dataTable = new SmartLockDatabaseDataSet.Table_PermissionsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(SmartLockDatabaseDataSet.Table_PermissionsDataTable dataTable) {
+            return this.Adapter.Update(dataTable);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(SmartLockDatabaseDataSet dataSet) {
+            return this.Adapter.Update(dataSet, "Table_Permissions");
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow dataRow) {
+            return this.Adapter.Update(new global::System.Data.DataRow[] {
+                        dataRow});
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow[] dataRows) {
+            return this.Adapter.Update(dataRows);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
+        public virtual int Delete(int Original_Id, int Original_UserID, int Original_LockID) {
+            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_Id));
+            this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(Original_UserID));
+            this.Adapter.DeleteCommand.Parameters[2].Value = ((int)(Original_LockID));
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
+            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.DeleteCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.DeleteCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
+        public virtual int Insert(int UserID, int LockID) {
+            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(UserID));
+            this.Adapter.InsertCommand.Parameters[1].Value = ((int)(LockID));
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
+            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.InsertCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.InsertCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(int UserID, int LockID, int Original_Id, int Original_UserID, int Original_LockID, int Id) {
+            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(UserID));
+            this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(LockID));
+            this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(Original_Id));
+            this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(Original_UserID));
+            this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(Original_LockID));
+            this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(Id));
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
+            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.UpdateCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.UpdateCommand.Connection.Close();
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
+        public virtual int Update(int UserID, int LockID, int Original_Id, int Original_UserID, int Original_LockID) {
+            return this.Update(UserID, LockID, Original_Id, Original_UserID, Original_LockID, Original_Id);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, false)]
+        public virtual int DeletePermissions(int UserID) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[1];
+            command.Parameters[0].Value = ((int)(UserID));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual object GetPermissions(int UserID) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[2];
+            command.Parameters[0].Value = ((int)(UserID));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            object returnValue;
+            try {
+                returnValue = command.ExecuteScalar();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            if (((returnValue == null) 
+                        || (returnValue.GetType() == typeof(global::System.DBNull)))) {
+                return null;
+            }
+            else {
+                return ((object)(returnValue));
+            }
+        }
+    }
+    
+    /// <summary>
     ///TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
     ///</summary>
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -5343,6 +6412,8 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
         private Table_UserTableAdapter _table_UserTableAdapter;
         
         private Table_LocksTableAdapter _table_LocksTableAdapter;
+        
+        private Table_PermissionsTableAdapter _table_PermissionsTableAdapter;
         
         private bool _backupDataSetBeforeUpdate;
         
@@ -5417,6 +6488,20 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
+            "a", "System.Drawing.Design.UITypeEditor")]
+        public Table_PermissionsTableAdapter Table_PermissionsTableAdapter {
+            get {
+                return this._table_PermissionsTableAdapter;
+            }
+            set {
+                this._table_PermissionsTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public bool BackupDataSetBeforeUpdate {
             get {
                 return this._backupDataSetBeforeUpdate;
@@ -5450,6 +6535,10 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                             && (this._table_LocksTableAdapter.Connection != null))) {
                     return this._table_LocksTableAdapter.Connection;
                 }
+                if (((this._table_PermissionsTableAdapter != null) 
+                            && (this._table_PermissionsTableAdapter.Connection != null))) {
+                    return this._table_PermissionsTableAdapter.Connection;
+                }
                 return null;
             }
             set {
@@ -5473,6 +6562,9 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                     count = (count + 1);
                 }
                 if ((this._table_LocksTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._table_PermissionsTableAdapter != null)) {
                     count = (count + 1);
                 }
                 return count;
@@ -5522,6 +6614,15 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._table_PermissionsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Table_Permissions.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._table_PermissionsTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             return result;
         }
         
@@ -5564,6 +6665,14 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._table_PermissionsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Table_Permissions.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._table_PermissionsTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             return result;
         }
         
@@ -5574,6 +6683,14 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private int UpdateDeletedRows(SmartLockDatabaseDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
+            if ((this._table_PermissionsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Table_Permissions.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._table_PermissionsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
             if ((this._table_LocksTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.Table_Locks.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -5665,6 +6782,11 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                 throw new global::System.ArgumentException("Tutti gli oggetti TableAdapter gestiti da TableAdapterManager devono utilizzare l" +
                         "a stessa stringa di connessione.");
             }
+            if (((this._table_PermissionsTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._table_PermissionsTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("Tutti gli oggetti TableAdapter gestiti da TableAdapterManager devono utilizzare l" +
+                        "a stessa stringa di connessione.");
+            }
             global::System.Data.IDbConnection workConnection = this.Connection;
             if ((workConnection == null)) {
                 throw new global::System.ApplicationException("TableAdapterManager non contiene informazioni di connessione. Impostare la propri" +
@@ -5732,6 +6854,15 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                     if (this._table_LocksTableAdapter.Adapter.AcceptChangesDuringUpdate) {
                         this._table_LocksTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
                         adaptersWithAcceptChangesDuringUpdate.Add(this._table_LocksTableAdapter.Adapter);
+                    }
+                }
+                if ((this._table_PermissionsTableAdapter != null)) {
+                    revertConnections.Add(this._table_PermissionsTableAdapter, this._table_PermissionsTableAdapter.Connection);
+                    this._table_PermissionsTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._table_PermissionsTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._table_PermissionsTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._table_PermissionsTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._table_PermissionsTableAdapter.Adapter);
                     }
                 }
                 // 
@@ -5807,6 +6938,10 @@ SELECT Id, LockID, LockName, LockEnabled, LockLastSeen, LockMinutesOffline FROM 
                 if ((this._table_LocksTableAdapter != null)) {
                     this._table_LocksTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._table_LocksTableAdapter]));
                     this._table_LocksTableAdapter.Transaction = null;
+                }
+                if ((this._table_PermissionsTableAdapter != null)) {
+                    this._table_PermissionsTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._table_PermissionsTableAdapter]));
+                    this._table_PermissionsTableAdapter.Transaction = null;
                 }
                 if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
                     global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];
