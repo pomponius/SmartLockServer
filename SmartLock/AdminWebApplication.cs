@@ -13,82 +13,21 @@ using System.Dynamic;
 using Nancy.Security;
 using SmartLock.Models;
 using Nancy.Responses;
-
+using System.IO;
+using System.Data;
+using System.Globalization;
+using Nancy.ModelBinding;
 
 namespace SmartLock
 {
     public class AdminWebApplication : NancyModule
     {
 
-        private class Table
-        {
-            public string Name { get; set; }
-            public int Age { get; set; }
-
-        }
-
-
-        private class Product
-        {
-            public string Name { get; set; }
-            public string Category { get; set; }
-            public int Id { get; set; }
-            public decimal Price { get; set; }
-
-        }
-
-        Product[] products = new Product[]
-        {
-            new Product { Id = 1, Name = "Tomato Soup", Category = "Groceries", Price = 1 },
-            new Product { Id = 2, Name = "Yo-yo", Category = "Toys", Price = 3.75M },
-            new Product { Id = 3, Name = "Hammer", Category = "Hardware", Price = 16.99M }
-        };
-
-
         public AdminWebApplication()
         {
-            Get["/hello"] = parameters => {
-                {
-                    Table model = new Table();
 
-                    model.Name = "Marco";
-                    model.Age = 24;
-
-
-                    return View["indexhello", model];
-                };
-            };
-
-            Get["/products"] = parameters => {
-                {
-                    return View["products"];
-                };
-            };
-
-            Get["api/products/"] = parameters =>
-            {
-                Response response = Response.AsJson(products);
-                response.ContentType = "application/json";
-                return response;
-            };
-
-            Get["api/products/{id}"] = parameters =>
-            {
-                Product product = products.FirstOrDefault((p) => p.Id == parameters.id);
-                if (product == null)
-                {
-                    return "";
-                }
-                Response response = Response.AsJson(product);
-                response.ContentType = "application/json";
-                return response;
-            };
-
-            /*Get["/"] = args => {
-                return View["index"];
-            };*/
             Get["/"] = args => {
-                return new RedirectResponse("/secure");
+                return new RedirectResponse("/users");
             };
 
             Get["/login"] = args =>
@@ -121,12 +60,106 @@ namespace SmartLock
             };
 
 
-            Get["/secure"] = args => {
+            Get["/users"] = args => {
                 this.RequiresAuthentication();
 
                 UserIdentity myUserIdentity = (UserIdentity) this.Context.CurrentUser;
-                var model = new AdminModel(myUserIdentity.AdminData.AdminName);
-                return View["secure.cshtml", model];
+
+                int nlocks = 0;
+
+                EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = AdminDatabase.getLocks();
+                if (myLockList == null)
+                    nlocks = 0;
+                else
+                    nlocks = myLockList.Count();
+
+                string[,] myLocksName = new string[nlocks,2];
+                int i = 0;
+                foreach (SmartLockDatabaseDataSet.Table_LocksRow lockrow in myLockList)
+                {
+                    myLocksName[i, 0] = lockrow.LockID.ToString();
+                    myLocksName[i, 1] = lockrow.IsLockNameNull() ? lockrow.LockID.ToString() : lockrow.LockName;
+                    i++;
+                }
+
+                var model = new AdminModel(myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
+                return View["adminuser.cshtml", model];
+            };
+
+            Get["/files/{filename}"] = args => {
+                string path = "views\\AdminWebApplication\\files\\" + args.filename;
+                if (!File.Exists(path)) throw new FileNotFoundException();
+                return Response.AsFile(path);
+                //return "ok!";
+            };
+
+
+            Get["api/users/"] = args => {
+                this.RequiresAuthentication();
+
+                
+                EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = AdminDatabase.getUsers();
+
+                List<AdminUserModel> myUserListBuilder = new List<AdminUserModel>();
+                if (myUserList != null)
+                {
+                    foreach (SmartLockDatabaseDataSet.Table_UserRow userRow in myUserList)
+                    {
+                        string perm = AdminDatabase.getPermissions(userRow.UserID);
+                        if (perm != null)
+                        {
+                            perm=perm.Replace(" ", "");
+                        }
+                        myUserListBuilder.Add(new AdminUserModel { user_id = userRow.UserID, user_name = userRow.UserName, user_surname= userRow.UserSurname, user_address = (userRow.IsUserAddressNull()?null:userRow.UserAddress), user_city = (userRow.IsUserCityNull() ? null : userRow.UserCity), user_region = (userRow.IsUserRegionNull() ? null : userRow.UserRegion), user_postalcode = (userRow.IsUserPostalCodeNull() ? null : userRow.UserPostalCode), user_country = (userRow.IsUserCountryNull() ? null : userRow.UserCountry), user_phone = (userRow.IsUserPhoneNull() ? null : userRow.UserPhone), user_mail = userRow.UserMail, user_cardtype = (userRow.IsUserCardTypeNull() ? null : userRow.UserCardType), user_cardid = (userRow.IsUserCardIDNull() ? null : userRow.UserCardID), user_pinstart = userRow.UserPinStart.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), user_pin = userRow.UserPin, user_pinexpire = userRow.UserPinExpire.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), user_registrationdate = userRow.UserRegistrationDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), user_lastaccess = (userRow.IsUserLastAccessNull()?null:userRow.UserLastAccess.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)), user_cardenable = userRow.UserCardEnable, user_allowedlocks = (perm==null)?"":perm });
+                    }
+                }
+
+                AdminUserListModel myUserListModel = new AdminUserListModel { data = myUserListBuilder };
+
+                Response response = Response.AsJson(myUserListModel);
+                response.ContentType = "application/json";
+                return response;
+            };
+
+            Post["api/users/"] = args => {
+                this.RequiresAuthentication();
+                var myUserListModel = this.Bind<AdminUserModel>();
+
+                string result = AdminDatabase.CreateNewUser(myUserListModel);
+
+                return result;
+            };
+
+            Put["api/users/"] = args => {
+                this.RequiresAuthentication();
+                var myUserListModel = this.Bind<AdminUserModel>();
+
+                string result = AdminDatabase.UpdateUser(myUserListModel);
+
+                return result;
+            };
+
+            Delete["api/users/{id}"] = args => {
+                this.RequiresAuthentication();
+
+                int parsedId = 0;
+                try
+                {
+                    parsedId = Int32.Parse(args.id);
+                }
+                catch
+                {
+                    return "id not parsed correctly";
+                }
+
+                string result = AdminDatabase.DeleteUser(parsedId);
+
+                return result;
+            };
+
+            Get["/test"] = result => {
+
+                return View["testedittable.cshtml"];
             };
         }
 
