@@ -60,6 +60,16 @@ namespace SmartLock
             };
 
 
+            Get["/locks"] = args => {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                var model = new AdminModel("locks", myUserIdentity.AdminData.AdminName, null, 0);
+
+                return View["adminlocks.cshtml", model];
+            };
+
             Get["/users"] = args => {
                 this.RequiresAuthentication();
 
@@ -82,7 +92,7 @@ namespace SmartLock
                     i++;
                 }
 
-                var model = new AdminModel(myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
+                var model = new AdminModel("users", myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
                 return View["adminuser.cshtml", model];
             };
 
@@ -123,18 +133,18 @@ namespace SmartLock
 
             Post["api/users/"] = args => {
                 this.RequiresAuthentication();
-                var myUserListModel = this.Bind<AdminUserModel>();
+                var myUserModel = this.Bind<AdminUserModel>();
 
-                string result = AdminDatabase.CreateNewUser(myUserListModel);
+                string result = AdminDatabase.CreateNewUser(myUserModel);
 
                 return result;
             };
 
             Put["api/users/"] = args => {
                 this.RequiresAuthentication();
-                var myUserListModel = this.Bind<AdminUserModel>();
+                var myUserModel = this.Bind<AdminUserModel>();
 
-                string result = AdminDatabase.UpdateUser(myUserListModel);
+                string result = AdminDatabase.UpdateUser(myUserModel);
 
                 return result;
             };
@@ -157,10 +167,66 @@ namespace SmartLock
                 return result;
             };
 
-            Get["/test"] = result => {
 
-                return View["testedittable.cshtml"];
+            Get["api/locks/"] = args => {
+                this.RequiresAuthentication();
+
+
+                EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = AdminDatabase.getLocks();
+
+                List<AdminLockModel> myLockListBuilder = new List<AdminLockModel>();
+                if (myLockList != null)
+                {
+                    foreach (SmartLockDatabaseDataSet.Table_LocksRow lockRow in myLockList)
+                    {
+                        myLockListBuilder.Add(new AdminLockModel {id = lockRow.Id, lock_id = lockRow.LockID, lock_name = (lockRow.IsLockNameNull() ? null : lockRow.LockName), lock_enable=lockRow.LockEnabled, lock_lastseen = (lockRow.IsLockLastSeenNull() ? null : lockRow.LockLastSeen.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)), lock_minutesoffline = lockRow.LockMinutesOffline });
+                    }
+                }
+
+                AdminLockListModel myLockListModel = new AdminLockListModel { data = myLockListBuilder };
+
+                Response response = Response.AsJson(myLockListModel);
+                response.ContentType = "application/json";
+                return response;
             };
+
+            Post["api/locks/"] = args => {
+                this.RequiresAuthentication();
+                var myLockModel = this.Bind<AdminLockModel>();
+
+                string result = AdminDatabase.CreateNewLock(myLockModel);
+
+                return result;
+            };
+
+            Put["api/locks/"] = args => {
+                this.RequiresAuthentication();
+                var myLockModel = this.Bind<AdminLockModel>();
+
+                string result = AdminDatabase.UpdateLock(myLockModel);
+
+                return result;
+            };
+
+            Delete["api/locks/{id}"] = args => {
+                this.RequiresAuthentication();
+
+                int parsedId = 0;
+                try
+                {
+                    parsedId = Int32.Parse(args.id);
+                }
+                catch
+                {
+                    return "id not parsed correctly";
+                }
+
+                string result = AdminDatabase.DeleteLock(parsedId);
+
+                return result;
+            };
+
+
         }
 
 

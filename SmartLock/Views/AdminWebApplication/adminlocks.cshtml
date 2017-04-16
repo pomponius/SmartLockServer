@@ -1,0 +1,466 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="/media/images/favicon.png">
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="files/loader.css">
+	<style type="text/css" class="init">
+	td.details-control {
+		background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+		cursor: pointer;
+	}
+	tr.shown td.details-control {
+		background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+	}
+	</style>
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js">
+	</script>
+	
+	
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	.modal-header, h4, .close {
+	  background-color: #5cb85c;
+	  color:white !important;
+	  text-align: center;
+	  font-size: 30px;
+	}
+	.modal-footer {
+	  background-color: #f9f9f9;
+	}
+	</style>
+	
+	
+	<script type="text/javascript" class="init">
+	
+    var uri = 'api/locks';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+		$.getJSON(uri).done(function (jsondata) {
+			
+			document.getElementById("editBtn").disabled = true;
+			document.getElementById("deleteBtn").disabled = true;
+
+			
+			
+			$("#newBtn").click(function(){
+				$("#newModal").modal();
+			});
+			
+			$("#deleteBtn").click(function(){
+				var rowid = table.row('.selected').id();
+				var lock_by_id = getNodeById(rowid, jsondata.data);
+				$("#deletetext").text("Delete "+ lock_by_id.lock_name + " - ID: "+ lock_by_id.lock_id+ "?");
+				$("#deleteModal").modal();
+			});
+			
+			$("#editBtn").click(function(){
+				var rowid = table.row('.selected').id();
+				var lock_by_id = getNodeById(rowid, jsondata.data);
+				
+				$("#elockid").val(lock_by_id.lock_id);
+				$("#elockname").val(lock_by_id.lock_name);
+				$("#elockminutesoffline").val(lock_by_id.lock_minutesoffline);
+
+				if(lock_by_id.lock_enable)
+					document.getElementById("elockenable").checked = true;
+				else
+					document.getElementById("elockenable").checked = false;
+	
+				$("#editModal").modal();
+			});
+			
+			
+			var table = $('#example').DataTable( {
+				dom: "Bfrtip",
+				"ajax": 'api/locks',
+				 order: [[ 1, 'asc' ]],
+				 rowId: 'id',
+				 "lengthMenu": [ 10, 25, 50, 75, 100 ],
+				 "columnDefs": [
+					{"className": "dt-center", "targets": "_all"}
+				],
+				columns: [
+					{ data: function ( row, type, val, meta ) {
+							if(row.lock_enable==1)
+								return '<span class="glyphicon glyphicon-ok" style="color:#00FF00;"></span>';
+							else
+								return '<span class="glyphicon glyphicon-remove" style="color:#FF0000;"></span>';
+						}
+					},
+					{ data: "lock_id" },
+					{ data: "lock_name" },
+					{ data: "lock_lastseen" },
+					{ data: "lock_minutesoffline" }
+				],
+				select: {
+					style: 'single'
+				}
+			});
+			
+			
+
+					 
+			$('#example tbody').on( 'click', 'tr', function () {
+				if ( $(this).hasClass('selected') ) {
+					$(this).removeClass('selected');
+					document.getElementById("editBtn").disabled = true;
+					document.getElementById("deleteBtn").disabled = true;
+				}
+				else {
+					if(Object.keys(jsondata.data).length>0){
+						table.$('tr.selected').removeClass('selected');
+						$(this).addClass('selected');
+						document.getElementById("editBtn").disabled = false;
+						document.getElementById("deleteBtn").disabled = false;
+					}
+				}
+			});
+
+			
+			$("#newLockBtn").click(function(){			
+				var myjson = validateform("n", jsondata.data);
+				if(myjson!=null){
+					//console.log(JSON.stringify(myjson));
+					//construct an HTTP request
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", "api/locks", true);
+					xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+					// send the collected data as JSON
+					xhr.send(JSON.stringify(myjson));
+
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == XMLHttpRequest.DONE) {
+							if(xhr.response=="OK!"){
+								$("#newModal").modal('hide');
+								document.getElementById("newLockForm").reset();
+								updatePage();
+							}else{
+								alert("Error: "+xhr.response);
+							}
+						}
+					}
+				}	else{
+					alert("There are errors in the form!");
+				}	
+			});
+			
+			
+			$("#editLockBtn").click(function(){			
+				var myjson = validateform("e", jsondata.data);
+				if(myjson!=null){
+					var rowid = table.row('.selected').id();
+					var lock_by_id = getNodeById(rowid, jsondata.data);
+					myjson.id=lock_by_id.id;
+					//console.log(JSON.stringify(myjson));
+					//construct an HTTP request
+					var xhr = new XMLHttpRequest();
+					xhr.open("PUT", "api/locks", true);
+					xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+					// send the collected data as JSON
+					//console.log(JSON.stringify(myjson));
+					xhr.send(JSON.stringify(myjson));
+
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == XMLHttpRequest.DONE) {
+							if(xhr.response=="OK!"){
+								$("#editModal").modal('hide');
+								document.getElementById("editLockForm").reset();
+								updatePage();
+							}else{
+								alert("Error: "+xhr.response);
+							}
+						}
+					}
+				}	else{
+					alert("There are errors in the form!");
+				}	
+			});
+			
+			$("#delLockBtn").click(function(){			
+				var rowid = table.row('.selected').id();
+				var lock_by_id = getNodeById(rowid, jsondata.data);
+				//construct an HTTP request
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", "api/locks/"+lock_by_id.lock_id, true);
+				//xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+				// send the collected data as JSON
+				//console.log(JSON.stringify(myjson));
+				xhr.send();
+
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == XMLHttpRequest.DONE) {
+						if(xhr.response=="OK!"){
+							$("#deleteModal").modal('hide');
+							updatePage();
+						}else{
+							alert("Error: "+xhr.response);
+						}
+					}
+				}
+			});
+			
+			function updatePage(){
+				//$.getJSON(uri, function(updateddata) {jsondata=updateddata});
+				table.ajax.reload(function ( updateddata ) {
+					jsondata=updateddata
+					document.getElementById("editBtn").disabled = true;
+					document.getElementById("deleteBtn").disabled = true;
+				});
+			}
+			
+
+        });
+    });
+	
+	
+
+	function getNodeById(id, obj){
+		for (var i = 0; i < obj.length; i++){
+		  if (obj[i].id == id){
+			return obj[i];
+		  }
+		}
+		return null;
+	}
+	
+	function validateform(f, mydata){
+		var myjson = new Object();
+		var errorfound=0;
+		
+		var lockname=document.getElementById(f+"lockname").value;
+		var lockid=document.getElementById(f+"lockid").value;
+		var lockenable=document.getElementById(f+"lockenable").checked;
+		var lockminutesoffline=document.getElementById(f+"lockminutesoffline").value;
+		
+		if(lockname == "" || lockname == "undefined"){
+			myjson.lock_name=null;
+		} else {
+			myjson.lock_name=lockname;
+		}
+		if(lockid == "" || lockid == "undefined"){
+			document.getElementById(f+"lockid").parentNode.parentNode.className="form-group has-error";
+			myjson.lock_id=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"lockid").parentNode.parentNode.className="form-group";
+			myjson.lock_id=lockid;
+			if(f=="n"){
+				for (var i = 0; i < mydata.length; i++){
+					if (mydata[i].lock_id == parseInt(lockid)){
+						document.getElementById(f+"lockid").parentNode.parentNode.className="form-group has-error";
+						myjson.lock_id=null;
+						errorfound=1;
+						break;
+					}
+				}
+			}
+		}
+		if(lockminutesoffline == "" || lockminutesoffline == "undefined"){
+			document.getElementById(f+"lockminutesoffline").parentNode.parentNode.className="form-group has-error";
+			myjson.lock_minutesoffline=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"lockminutesoffline").parentNode.parentNode.className="form-group";
+			myjson.lock_minutesoffline=lockminutesoffline;
+		}
+		
+		
+		if(lockenable){
+			myjson.lock_enable=1;
+		} else {
+			myjson.lock_enable=0;
+		}
+		
+		if (errorfound==1){
+			return null;
+		}
+		return myjson;
+	}
+	
+
+	</script>
+<title>Users</title>
+</head>
+<body>
+<div class="container-fluid">
+@Html.Partial("navbar", Model)
+<div class="jumbotron">
+  <div>
+	<h2 style="text-align: center;">Locks Management</h2>
+  </div>
+ <br />
+  <div>
+  				<table id="example" class="display" cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th>Enabled</th>
+							<th>Lock ID</th>
+							<th>Name</th>
+							<th>Last Seen</th>
+							<th>Minutes Offline</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>Enabled</th>
+							<th>Lock ID</th>
+							<th>Name</th>
+							<th>Last Seen</th>
+							<th>Minutes Offline</th>
+						</tr>
+					</tfoot>
+				</table>
+  </div>
+	<button type="button" class="btn btn-default btn-lg" id="newBtn">New</button>
+    <button type="button" class="btn btn-default btn-lg" id="editBtn">Edit</button>
+	<button type="button" class="btn btn-default btn-lg" id="deleteBtn">Delete</button>
+
+  <!-- Trigger the modal with a button -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-lock"></span> Edit Lock</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" class="form-horizontal" id="editLockForm">
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="elockname">Name:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="elockname" placeholder="Name">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="elockid">*Lock ID:</label>
+			  <div class="col-sm-10">          
+				<input type="number" class="form-control" id="elockid" placeholder="Lock ID" readonly>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="elockenable">*Lock:</label>
+			  <div class="col-sm-10">
+			  <div class="checkbox">
+                <label><input type="checkbox" value="enabled" id="elockenable">Enabled</label>
+			  </div>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="elockminutesoffline">*Minutes Offline:</label>
+			  <div class="col-sm-10">          
+				<input type="number" class="form-control" id="elockminutesoffline" placeholder="Minutes Offline">
+			  </div>
+			</div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="editLockBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+  
+  
+    <div class="modal fade" id="newModal" role="dialog">
+    <div class="modal-dialog">
+    
+<!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-lock"></span> New Lock</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" class="form-horizontal" id="newLockForm">
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nlockname">Name:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="nlockname" placeholder="Name">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nlockid">*Lock ID:</label>
+			  <div class="col-sm-10">          
+				<input type="number" class="form-control" id="nlockid" placeholder="Lock ID">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nlockenable">*Lock:</label>
+			  <div class="col-sm-10">
+			  <div class="checkbox">
+                <label><input type="checkbox" value="enabled" id="nlockenable">Enabled</label>
+			  </div>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nlockminutesoffline">*Minutes Offline:</label>
+			  <div class="col-sm-10">          
+				<input type="number" class="form-control" id="nlockminutesoffline" placeholder="Minutes Offline">
+			  </div>
+			</div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="newLockBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Add</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+     <div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+    
+<!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-user"></span> Delete Lock</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;text-align: center;">
+          <h3 id="deletetext" style="text-align: center;"></h3>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="delLockBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Delete</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="modal fade" id="loadingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="text-align: center;width:220px;">
+	      <div class="modal-content" style="text-align: center;">
+		  <div class="modal-body" style="padding:40px 50px;text-align: center;">
+		<div class="loader"></div>
+		</div>
+		</div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>

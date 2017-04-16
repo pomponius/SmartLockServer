@@ -11,9 +11,11 @@ namespace SmartLock.Models
         public string Adminname { get; private set; }
         public string[,] LocksName { get; private set; }
         public int NLocks { get; private set; }
+        public string Page { get; private set; }
 
-        public AdminModel(string username, string[,] locks, int nlocks)
+        public AdminModel(string page, string username, string[,] locks, int nlocks)
         {
+            Page = page;
             Adminname = username;
             LocksName = locks;
             NLocks = nlocks;

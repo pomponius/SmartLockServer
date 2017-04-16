@@ -28,6 +28,7 @@ namespace SmartLock
             myAdmin.Fill(myDataSet.Table_Admin);
             myUsers.Fill(myDataSet.Table_User);
             myLocks.Fill(myDataSet.Table_Locks);
+            myPermissions.Fill(myDataSet.Table_Permissions);
         }
 
 
@@ -64,7 +65,7 @@ namespace SmartLock
             string newpinstring;
             do {
                 newpin = rnd.Next(100000);      // 0 <= card < 52
-                newpinstring = "" + newpin;
+                newpinstring = newpin.ToString("D5");
                 myUserList = myUsers.GetByPin(newpinstring).AsEnumerable();
                 if (myUserList == null)
                     return "Query result is null";
@@ -86,6 +87,20 @@ namespace SmartLock
             return "OK!";
         }
 
+        public static string CreateNewLock(AdminLockModel mynewlock)
+        {
+            //check if id is already present
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetByID(mynewlock.lock_id).AsEnumerable();
+            if (myLockList.Count() != 0)
+                return "ID already present";
+
+            myLocks.Insert(mynewlock.lock_id, mynewlock.lock_name, mynewlock.lock_enable, null, mynewlock.lock_minutesoffline);
+
+            return "OK!";
+        }
+
+
+
         public static string UpdateUser(AdminUserModel myuser)
         {
 
@@ -103,10 +118,25 @@ namespace SmartLock
             return "OK!";
         }
 
+
+        public static string UpdateLock(AdminLockModel mylock)
+        {
+            myLocks.UpdateLock(mylock.lock_name, mylock.lock_enable, mylock.lock_minutesoffline, mylock.id);
+            return "OK!";
+        }
+
+
         public static string DeleteUser(int id)
         {
             myUsers.DeleteByUserID(id);
             myPermissions.DeletePermissions(id);
+            return "OK!";
+        }
+
+        public static string DeleteLock(int id)
+        {
+            myLocks.DeleteByLockID(id);
+            myPermissions.DeleteLocks(id);
             return "OK!";
         }
 
