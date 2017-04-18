@@ -147,7 +147,7 @@
     <None Include="Views\AdminWebApplication\adminadmins.cshtml" />
     <None Include="Views\AdminWebApplication\adminlocks.cshtml" />
     <None Include="Views\AdminWebApplication\adminlogs.cshtml" />
-    <None Include="Views\AdminWebApplication\adminuser.cshtml" />
+    <None Include="Views\AdminWebApplication\adminusers.cshtml" />
     <None Include="Views\AdminWebApplication\login.cshtml" />
     <None Include="Views\AdminWebApplication\navbar.cshtml" />
   </ItemGroup>
