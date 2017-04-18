@@ -16,7 +16,8 @@
       <ul class="nav navbar-nav">
 		@if(@Model.Page=="users"){<li class="active"><a href="users">Users<span class="sr-only">(current)</span></a></li>}else{<li><a href="users">Users</a></li>}
 		@if(@Model.Page=="locks"){<li class="active"><a href="locks">Locks<span class="sr-only">(current)</span></a></li>}else{<li><a href="locks">Locks</a></li>}
-        
+        @if(@Model.Page=="admins"){<li class="active"><a href="admins">Admins<span class="sr-only">(current)</span></a></li>}else{<li><a href="admins">Admins</a></li>}
+		@if(@Model.Page=="logs"){<li class="active"><a href="logs">Logs<span class="sr-only">(current)</span></a></li>}else{<li><a href="logs">Logs</a></li>}
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

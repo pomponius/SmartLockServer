@@ -6,6 +6,7 @@
 	<link rel="shortcut icon" type="image/png" href="/media/images/favicon.png">
 	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.2/css/select.dataTables.min.css">
 	<link rel="stylesheet" type="text/css" href="files/loader.css">
 	<style type="text/css" class="init">
 	td.details-control {
@@ -522,7 +523,7 @@ for(i = 0; i < (@Model.NLocks -1); i++){
     }*/
 
 	</script>
-<title>Users</title>
+<title>Users Management</title>
 </head>
 <body>
 <div class="container-fluid">
@@ -626,7 +627,7 @@ for(i = 0; i < (@Model.NLocks -1); i++){
 			<div class="form-group">
 			  <label class="control-label col-sm-2" for="eusrphone">Phone:</label>
 			  <div class="col-sm-10">          
-				<input type="number" class="form-control" id="eusrphone" placeholder="Phone">
+				<input type="tel" class="form-control" id="eusrphone" placeholder="Phone">
 			  </div>
 			</div>
 			<div class="form-group">
@@ -744,7 +745,7 @@ for(i = 0; i < (@Model.NLocks -1); i++){
 			<div class="form-group">
 			  <label class="control-label col-sm-2" for="nusrphone">Phone:</label>
 			  <div class="col-sm-10">          
-				<input type="number" class="form-control" id="nusrphone" placeholder="Phone">
+				<input type="tel" class="form-control" id="nusrphone" placeholder="Phone">
 			  </div>
 			</div>
 			<div class="form-group">

@@ -92,7 +92,9 @@
     </Compile>
     <Compile Include="FormsAuthBootstrapper.cs" />
     <Compile Include="ISmartLockRESTService.cs" />
+    <Compile Include="Models\AdminAdminModel.cs" />
     <Compile Include="Models\AdminLockModel.cs" />
+    <Compile Include="Models\AdminLogModel.cs" />
     <Compile Include="Models\AdminModel.cs" />
     <Compile Include="Models\AdminUserModel.cs" />
     <Compile Include="Program.cs" />
@@ -142,7 +144,9 @@
     <None Include="SmartLockDatabaseDataSet.xss">
       <DependentUpon>SmartLockDatabaseDataSet.xsd</DependentUpon>
     </None>
+    <None Include="Views\AdminWebApplication\adminadmins.cshtml" />
     <None Include="Views\AdminWebApplication\adminlocks.cshtml" />
+    <None Include="Views\AdminWebApplication\adminlogs.cshtml" />
     <None Include="Views\AdminWebApplication\adminuser.cshtml" />
     <None Include="Views\AdminWebApplication\login.cshtml" />
     <None Include="Views\AdminWebApplication\navbar.cshtml" />

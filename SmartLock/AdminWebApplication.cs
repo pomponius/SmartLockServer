@@ -65,9 +65,29 @@ namespace SmartLock
 
                 UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
 
-                var model = new AdminModel("locks", myUserIdentity.AdminData.AdminName, null, 0);
+                var model = new AdminModel("locks", myUserIdentity.AdminData.AdminID, myUserIdentity.AdminData.AdminName, null, 0);
 
                 return View["adminlocks.cshtml", model];
+            };
+
+            Get["/admins"] = args => {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                var model = new AdminModel("admins", myUserIdentity.AdminData.AdminID, myUserIdentity.AdminData.AdminName, null, 0);
+
+                return View["adminadmins.cshtml", model];
+            };
+
+            Get["/logs"] = args => {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                var model = new AdminModel("logs", myUserIdentity.AdminData.AdminID, myUserIdentity.AdminData.AdminName, null, 0);
+
+                return View["adminlogs.cshtml", model];
             };
 
             Get["/users"] = args => {
@@ -92,7 +112,7 @@ namespace SmartLock
                     i++;
                 }
 
-                var model = new AdminModel("users", myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
+                var model = new AdminModel("users", myUserIdentity.AdminData.AdminID, myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
                 return View["adminuser.cshtml", model];
             };
 
@@ -100,7 +120,6 @@ namespace SmartLock
                 string path = "views\\AdminWebApplication\\files\\" + args.filename;
                 if (!File.Exists(path)) throw new FileNotFoundException();
                 return Response.AsFile(path);
-                //return "ok!";
             };
 
 
@@ -226,6 +245,114 @@ namespace SmartLock
                 return result;
             };
 
+
+
+            Get["api/admins/"] = args => {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myAdminList = AdminDatabase.getAdmins();
+
+                List<AdminAdminModel> myAdminListBuilder = new List<AdminAdminModel>();
+                if (myAdminList != null)
+                {
+                    foreach (SmartLockDatabaseDataSet.Table_AdminRow adminRow in myAdminList)
+                    {
+                        myAdminListBuilder.Add(new AdminAdminModel { admin_id = adminRow.AdminID, admin_name = adminRow.AdminName, admin_surname = adminRow.AdminSurname, admin_login = adminRow.AdminLogin, admin_registrationdate = adminRow.AdminRegistrationDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), admin_phone = adminRow.AdminPhone, admin_loginfo = ((adminRow.AdminLogType / 2) % 2), admin_logaccess = (adminRow.AdminLogType % 2), admin_logerror = ((adminRow.AdminLogType / 4) % 2), admin_password = ((myUserIdentity.AdminData.AdminID == adminRow.AdminID)? adminRow.AdminPassword : null) });
+                    }
+                }
+
+                AdminAdminListModel myAdminListModel = new AdminAdminListModel { data = myAdminListBuilder };
+
+                Response response = Response.AsJson(myAdminListModel);
+                response.ContentType = "application/json";
+                return response;
+            };
+
+            Post["api/admins/"] = args => {
+                this.RequiresAuthentication();
+                var myAdminModel = this.Bind<AdminAdminModel>();
+
+                string result = AdminDatabase.CreateNewAdmin(myAdminModel);
+
+                return result;
+            };
+
+            Put["api/admins/"] = args => {
+                this.RequiresAuthentication();
+                var myAdminModel = this.Bind<AdminAdminModel>();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                myAdminModel.admin_id = myUserIdentity.AdminData.AdminID;
+
+                string result = AdminDatabase.UpdateAdmin(myAdminModel);
+
+                return result;
+            };
+
+            Delete["api/admins/{id}"] = args => {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                int parsedId = 0;
+                try
+                {
+                    parsedId = Int32.Parse(args.id);
+                }
+                catch
+                {
+                    return "id not parsed correctly";
+                }
+
+                string result = AdminDatabase.DeleteAdmin(parsedId);
+
+                return result;
+            };
+
+
+            Get["api/logs/"] = args => {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> myLogList = AdminDatabase.getLogs();
+
+                List<AdminLogModel> myLogListBuilder = new List<AdminLogModel>();
+                if (myLogList != null)
+                {
+                    foreach (SmartLockDatabaseDataSet.Table_LogRow logRow in myLogList)
+                    {
+                        char t;
+                        switch (logRow.LogType)
+                        {
+                            case 1: t = 'A'; break;
+                            case 2: t = 'I'; break;
+                            case 4: t = 'E'; break;
+                            default: t = 'U'; break;
+                        }
+
+                        myLogListBuilder.Add(new AdminLogModel { log_id = logRow.LogID, log_text = logRow.LogText, log_type = t, log_source = ((logRow.LogLockID==0)?"System": ("Lock ID: "+logRow.LogLockID)), log_date= logRow.LogDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) });
+                    }
+                }
+
+                AdminLogListModel myLogListModel = new AdminLogListModel { data = myLogListBuilder };
+
+                Response response = Response.AsJson(myLogListModel);
+                response.ContentType = "application/json";
+                return response;
+            };
+
+            Delete["api/logs/"] = args => {
+                this.RequiresAuthentication();
+                var myLogListModel = this.Bind<AdminLogListModel>();
+
+                string result = AdminDatabase.DeleteLogs(myLogListModel);
+
+                return result;
+            };
 
         }
 

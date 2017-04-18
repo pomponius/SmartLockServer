@@ -19,6 +19,7 @@ namespace SmartLock
         private static SmartLockDatabaseDataSetTableAdapters.Table_UserTableAdapter myUsers = new SmartLockDatabaseDataSetTableAdapters.Table_UserTableAdapter();
         private static SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
         private static SmartLockDatabaseDataSetTableAdapters.Table_PermissionsTableAdapter myPermissions = new SmartLockDatabaseDataSetTableAdapters.Table_PermissionsTableAdapter();
+        private static SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
 
 
 
@@ -29,6 +30,7 @@ namespace SmartLock
             myUsers.Fill(myDataSet.Table_User);
             myLocks.Fill(myDataSet.Table_Locks);
             myPermissions.Fill(myDataSet.Table_Permissions);
+            myLogs.Fill(myDataSet.Table_Log);
         }
 
 
@@ -56,6 +58,26 @@ namespace SmartLock
             return myLockList;
         }
 
+        public static EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> getLogs()
+        {
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> myLogList = myLogs.GetData().AsEnumerable();
+            if (myLogList == null)
+                return null;
+            if (myLogList.Count() == 0)
+                return null;
+            return myLogList;
+        }
+
+        public static EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> getAdmins()
+        {
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myAdminList = myAdmin.GetData().AsEnumerable();
+            if (myAdminList == null)
+                return null;
+            if (myAdminList.Count() == 0)
+                return null;
+            return myAdminList;
+        }
+
         public static string CreateNewUser(AdminUserModel mynewuser)
         {
             //generate a new pin
@@ -64,7 +86,7 @@ namespace SmartLock
             int newpin;
             string newpinstring;
             do {
-                newpin = rnd.Next(100000);      // 0 <= card < 52
+                newpin = rnd.Next(100000);
                 newpinstring = newpin.ToString("D5");
                 myUserList = myUsers.GetByPin(newpinstring).AsEnumerable();
                 if (myUserList == null)
@@ -89,12 +111,30 @@ namespace SmartLock
 
         public static string CreateNewLock(AdminLockModel mynewlock)
         {
+            if (mynewlock.lock_id < 1)
+                return "ID must be >0";
+
             //check if id is already present
             EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetByID(mynewlock.lock_id).AsEnumerable();
             if (myLockList.Count() != 0)
                 return "ID already present";
 
             myLocks.Insert(mynewlock.lock_id, mynewlock.lock_name, mynewlock.lock_enable, null, mynewlock.lock_minutesoffline);
+
+            return "OK!";
+        }
+
+        public static string CreateNewAdmin(AdminAdminModel mynewadmin)
+        {
+            int log = 0;
+            if (mynewadmin.admin_logaccess == 1)
+                log += 1;
+            if (mynewadmin.admin_loginfo == 1)
+                log += 2;
+            if (mynewadmin.admin_logerror == 1)
+                log += 4;
+
+            myAdmin.Insert(mynewadmin.admin_name, mynewadmin.admin_surname, mynewadmin.admin_login, mynewadmin.admin_password, DateTime.Now, mynewadmin.admin_phone, log, Guid.NewGuid().ToString());
 
             return "OK!";
         }
@@ -125,6 +165,20 @@ namespace SmartLock
             return "OK!";
         }
 
+        public static string UpdateAdmin(AdminAdminModel myadmin)
+        {
+            int log = 0;
+            if (myadmin.admin_logaccess == 1)
+                log += 1;
+            if (myadmin.admin_loginfo == 1)
+                log += 2;
+            if (myadmin.admin_logerror == 1)
+                log += 4;
+
+            myAdmin.UpdateAdmin(myadmin.admin_name, myadmin.admin_surname, myadmin.admin_login, myadmin.admin_password, myadmin.admin_phone, log, myadmin.admin_id);
+            return "OK!";
+        }
+
 
         public static string DeleteUser(int id)
         {
@@ -137,6 +191,24 @@ namespace SmartLock
         {
             myLocks.DeleteByLockID(id);
             myPermissions.DeleteLocks(id);
+            return "OK!";
+        }
+
+        public static string DeleteAdmin(int id)
+        {
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myAdminList = myAdmin.GetData().AsEnumerable();
+            if (myAdminList.Count() == 1)
+                return "At leat one Admin must be present!";
+            myAdmin.DeleteByAdminID(id);
+            return "OK!";
+        }
+
+        public static string DeleteLogs(AdminLogListModel myloglist)
+        {
+            foreach (AdminLogModel mylog in myloglist.data)
+            {
+                myLogs.DeleteByLogID(mylog.log_id);
+            }
             return "OK!";
         }
 

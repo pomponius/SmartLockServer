@@ -1,0 +1,550 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="/media/images/favicon.png">
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.2/css/select.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="files/loader.css">
+
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js">
+	</script>
+	
+	
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	.modal-header, h4, .close {
+	  background-color: #5cb85c;
+	  color:white !important;
+	  text-align: center;
+	  font-size: 30px;
+	}
+	.modal-footer {
+	  background-color: #f9f9f9;
+	}
+	</style>
+	
+	
+	<script type="text/javascript" class="init">
+	
+    var uri = 'api/admins';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+		$.getJSON(uri).done(function (jsondata) {
+			
+			document.getElementById("deleteBtn").disabled = true;
+
+			$("#newBtn").click(function(){
+				$("#newModal").modal();
+			});
+			
+			$("#deleteBtn").click(function(){
+				var rowid = table.row('.selected').id();
+				var admin_by_id = getNodeById(rowid, jsondata.data);
+				$("#deletetext").text("Delete "+ admin_by_id.admin_name + " "+ admin_by_id.admin_surname+ "?");
+				$("#deleteModal").modal();
+			});
+			
+			$("#editBtn").click(function(){
+				var admin_by_id = getNodeById( @Model.AdminID, jsondata.data);
+				
+				$("#eadminid").val(admin_by_id.admin_id);
+				$("#eadminname").val(admin_by_id.admin_name);
+				$("#eadminsurname").val(admin_by_id.admin_surname);
+				$("#eadminlogin").val(admin_by_id.admin_login);
+				$("#eadminpassword").val(admin_by_id.admin_password);
+				$("#eadminpassword2").val(admin_by_id.admin_password);
+				$("#eadminphone").val(admin_by_id.admin_phone);
+
+				if(admin_by_id.admin_logaccess)
+					document.getElementById("eadminlogaccess").checked = true;
+				else
+					document.getElementById("eadminlogaccess").checked = false;
+					
+				if(admin_by_id.admin_loginfo)
+					document.getElementById("eadminloginfo").checked = true;
+				else
+					document.getElementById("eadminloginfo").checked = false;
+					
+				if(admin_by_id.admin_logerror)
+					document.getElementById("eadminlogerror").checked = true;
+				else
+					document.getElementById("eadminlogerror").checked = false;
+	
+				$("#editModal").modal();
+			});
+			
+			
+			var table = $('#example').DataTable( {
+				dom: "Bfrtip",
+				"ajax": 'api/admins',
+				 order: [[ 1, 'asc' ]],
+				 rowId: 'admin_id',
+				 "lengthMenu": [ 10, 25, 50, 75, 100 ],
+				 "columnDefs": [
+					{"className": "dt-center", "targets": "_all"}
+				],
+				columns: [
+					{ data: "admin_name" },
+					{ data: "admin_surname" },
+					{ data: "admin_login" },
+					{ data: "admin_registrationdate" },
+					{ data: "admin_phone" },
+					{ data: function ( row, type, val, meta ) {
+							retstring="";
+							if(row.admin_logaccess==1){
+								retstring+='<span class="glyphicon glyphicon-ok" style="color:#00FF00;"></span>Access &nbsp;&nbsp;';
+							}else{
+								retstring+='<span class="glyphicon glyphicon-remove" style="color:#FF0000;"></span>Access &nbsp;&nbsp;';
+							}
+							if(row.admin_loginfo==1){
+								retstring+='<span class="glyphicon glyphicon-ok" style="color:#00FF00;"></span>Info &nbsp;&nbsp;';
+							}else{
+								retstring+='<span class="glyphicon glyphicon-remove" style="color:#FF0000;"></span>Info &nbsp;&nbsp;';
+							}
+							if(row.admin_logerror==1){
+								retstring+='<span class="glyphicon glyphicon-ok" style="color:#00FF00;"></span>Error &nbsp;&nbsp;';
+							}else{
+								retstring+='<span class="glyphicon glyphicon-remove" style="color:#FF0000;"></span>Error &nbsp;&nbsp;';
+							}
+							return retstring;
+						}
+					}
+				],
+				select: {
+					style: 'single'
+				}
+			});
+			
+			
+
+					 
+			$('#example tbody').on( 'click', 'tr', function () {
+				if ( $(this).hasClass('selected') ) {
+					$(this).removeClass('selected');
+					document.getElementById("deleteBtn").disabled = true;
+				}
+				else {
+					if(Object.keys(jsondata.data).length>0){
+						table.$('tr.selected').removeClass('selected');
+						$(this).addClass('selected');
+						document.getElementById("deleteBtn").disabled = false;
+					}
+				}
+			});
+
+			
+			$("#newAdminBtn").click(function(){			
+				var myjson = validateform("n", jsondata.data);
+				if(myjson!=null){
+					//console.log(JSON.stringify(myjson));
+					//construct an HTTP request
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", "api/admins", true);
+					xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+					// send the collected data as JSON
+					xhr.send(JSON.stringify(myjson));
+
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == XMLHttpRequest.DONE) {
+							if(xhr.response=="OK!"){
+								$("#newModal").modal('hide');
+								document.getElementById("newAdminForm").reset();
+								updatePage();
+							}else{
+								alert("Error: "+xhr.response);
+							}
+						}
+					}
+				}	else{
+					alert("There are errors in the form!");
+				}	
+			});
+			
+			
+			$("#editAdminBtn").click(function(){			
+				var myjson = validateform("e", jsondata.data);
+				if(myjson!=null){
+
+					myjson.admin_id= @Model.AdminID ;
+					//console.log(JSON.stringify(myjson));
+					//construct an HTTP request
+					var xhr = new XMLHttpRequest();
+					xhr.open("PUT", "api/admins", true);
+					xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+					// send the collected data as JSON
+					//console.log(JSON.stringify(myjson));
+					xhr.send(JSON.stringify(myjson));
+
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == XMLHttpRequest.DONE) {
+							if(xhr.response=="OK!"){
+								$("#editModal").modal('hide');
+								document.getElementById("editAdminForm").reset();
+								location.reload();
+								//updatePage();
+							}else{
+								alert("Error: "+xhr.response);
+							}
+						}
+					}
+				}	else{
+					alert("There are errors in the form!");
+				}	
+			});
+			
+			$("#delAdminBtn").click(function(){			
+				var rowid = table.row('.selected').id();
+				var admin_by_id = getNodeById(rowid, jsondata.data);
+				//construct an HTTP request
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", "api/admins/"+admin_by_id.admin_id, true);
+				//xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+				// send the collected data as JSON
+				//console.log(JSON.stringify(myjson));
+				xhr.send();
+
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == XMLHttpRequest.DONE) {
+						if(xhr.response=="OK!"){
+							$("#deleteModal").modal('hide');
+							location.reload();
+							//updatePage();
+						}else{
+							alert("Error: "+xhr.response);
+						}
+					}
+				}
+			});
+			
+			function updatePage(){
+				//$.getJSON(uri, function(updateddata) {jsondata=updateddata});
+				table.ajax.reload(function ( updateddata ) {
+					jsondata=updateddata
+					document.getElementById("deleteBtn").disabled = true;
+				});
+			}
+			
+
+        });
+    });
+	
+	
+
+	function getNodeById(id, obj){
+		for (var i = 0; i < obj.length; i++){
+		  if (obj[i].admin_id == id){
+			return obj[i];
+		  }
+		}
+		return null;
+	}
+	
+	function validateform(f, mydata){
+		var myjson = new Object();
+		var errorfound=0;
+		
+		var adminname=document.getElementById(f+"adminname").value;
+		var adminsurname=document.getElementById(f+"adminsurname").value;
+		var adminlogin=document.getElementById(f+"adminlogin").value;
+		var adminpassword=document.getElementById(f+"adminpassword").value;
+		var adminpassword2=document.getElementById(f+"adminpassword2").value;
+		var adminphone=document.getElementById(f+"adminphone").value;
+		var adminlogaccess=document.getElementById(f+"adminlogaccess").checked;
+		var adminloginfo=document.getElementById(f+"adminloginfo").checked;
+		var adminlogerror=document.getElementById(f+"adminlogerror").checked;
+
+		
+		if(adminname == "" || adminname == "undefined"){
+			document.getElementById(f+"adminname").parentNode.parentNode.className="form-group has-error";
+			myjson.admin_name=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"adminname").parentNode.parentNode.className="form-group";
+			myjson.admin_name=adminname;
+		}
+		if(adminsurname == "" || adminsurname == "undefined"){
+			document.getElementById(f+"adminsurname").parentNode.parentNode.className="form-group has-error";
+			myjson.admin_surname=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"adminsurname").parentNode.parentNode.className="form-group";
+			myjson.admin_surname=adminsurname;
+		}
+		if(adminlogin == "" || adminlogin == "undefined"){
+			document.getElementById(f+"adminlogin").parentNode.parentNode.className="form-group has-error";
+			myjson.admin_login=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"adminlogin").parentNode.parentNode.className="form-group";
+			myjson.admin_login=adminlogin;
+		}
+		if(adminphone == "" || adminphone == "undefined"){
+			document.getElementById(f+"adminphone").parentNode.parentNode.className="form-group has-error";
+			myjson.admin_phone=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"adminphone").parentNode.parentNode.className="form-group";
+			myjson.admin_phone=adminphone;
+		}
+		if(adminpassword == "" || adminpassword == "undefined" || adminpassword!=adminpassword2){
+			document.getElementById(f+"adminpassword").parentNode.parentNode.className="form-group has-error";
+			document.getElementById(f+"adminpassword2").parentNode.parentNode.className="form-group has-error";
+			myjson.admin_password=null;
+			errorfound=1;
+		} else {
+			document.getElementById(f+"adminpassword").parentNode.parentNode.className="form-group";
+			document.getElementById(f+"adminpassword2").parentNode.parentNode.className="form-group";
+			myjson.admin_password=adminpassword;
+		}
+		
+		if(adminlogaccess){
+			myjson.admin_logaccess=1;
+		} else {
+			myjson.admin_logaccess=0;
+		}
+		if(adminloginfo){
+			myjson.admin_loginfo=1;
+		} else {
+			myjson.admin_loginfo=0;
+		}
+		if(adminlogerror){
+			myjson.admin_logerror=1;
+		} else {
+			myjson.admin_logerror=0;
+		}
+		
+		
+		if (errorfound==1){
+			return null;
+		}
+		return myjson;
+	}
+	
+
+	</script>
+<title>Admins Management</title>
+</head>
+<body>
+<div class="container-fluid">
+@Html.Partial("navbar", Model)
+<div class="jumbotron">
+  <div>
+	<h2 style="text-align: center;">Admins Management</h2>
+  </div>
+ <br />
+  <div>
+  				<table id="example" class="display" cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Surname</th>
+							<th>Login</th>
+							<th>Registration Date</th>
+							<th>Phone</th>
+							<th>Logs Type Notification</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>Name</th>
+							<th>Surname</th>
+							<th>Login</th>
+							<th>Registration Date</th>
+							<th>Phone</th>
+							<th>Logs Type Notification</th>
+						</tr>
+					</tfoot>
+				</table>
+  </div>
+	<button type="button" class="btn btn-default btn-lg" id="newBtn">New</button>
+	<button type="button" class="btn btn-default btn-lg" id="deleteBtn">Delete</button>
+	<button type="button" class="btn btn-default btn-lg" id="editBtn">Edit my Account</button>
+
+  <!-- Trigger the modal with a button -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-user"></span> Edit my Account</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" class="form-horizontal" id="editAdminForm">
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="eadminname">*Name:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="eadminname" placeholder="Name">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="eadminsurname">*Surname:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="eadminsurname" placeholder="Surname">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="eadminlogin">*Login:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="eadminlogin" placeholder="Login">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="eadminpassword">*Password:</label>
+			  <div class="col-sm-10">          
+				<input type="password" class="form-control" id="eadminpassword">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="eadminpassword2">*Confirm Password:</label>
+			  <div class="col-sm-10">          
+				<input type="password" class="form-control" id="eadminpassword2">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="eadminphone">*Phone:</label>
+			  <div class="col-sm-10">          
+				<input type="tel" class="form-control" id="eadminphone" placeholder="Phone">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2">*Logs Notifications:</label>
+			  <div class="col-sm-10">
+			  <div class="checkbox">
+                <label><input type="checkbox" value="enabled" id="eadminlogaccess">Access &nbsp;&nbsp;</label>
+				<label><input type="checkbox" value="enabled" id="eadminloginfo">Info &nbsp;&nbsp;</label>
+				<label><input type="checkbox" value="enabled" id="eadminlogerror">Error &nbsp;&nbsp;</label>
+			  </div>
+			  </div>
+			</div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="editAdminBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+  
+  
+    <div class="modal fade" id="newModal" role="dialog">
+    <div class="modal-dialog">
+    
+<!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-user"></span> New Admin</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" class="form-horizontal" id="newAdminForm">
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nadminname">*Name:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="nadminname" placeholder="Name">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nadminsurname">*Surname:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="nadminsurname" placeholder="Surname">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nadminlogin">*Login:</label>
+			  <div class="col-sm-10">          
+				<input type="text" class="form-control" id="nadminlogin" placeholder="Login">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nadminpassword">*Password:</label>
+			  <div class="col-sm-10">          
+				<input type="password" class="form-control" id="nadminpassword">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nadminpassword2">*Confirm Password:</label>
+			  <div class="col-sm-10">          
+				<input type="password" class="form-control" id="nadminpassword2">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2" for="nadminphone">*Phone:</label>
+			  <div class="col-sm-10">          
+				<input type="tel" class="form-control" id="nadminphone" placeholder="Phone">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="control-label col-sm-2">*Logs Notifications:</label>
+			  <div class="col-sm-10">
+			  <div class="checkbox">
+                <label><input type="checkbox" value="enabled" id="nadminlogaccess">Access &nbsp;&nbsp;</label>
+				<label><input type="checkbox" value="enabled" id="nadminloginfo">Info &nbsp;&nbsp;</label>
+				<label><input type="checkbox" value="enabled" id="nadminlogerror">Error &nbsp;&nbsp;</label>
+			  </div>
+			  </div>
+			</div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="newAdminBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Add</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+     <div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+    
+<!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-user"></span> Delete Admin</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;text-align: center;">
+          <h3 id="deletetext" style="text-align: center;"></h3>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="delAdminBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Delete</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="modal fade" id="loadingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="text-align: center;width:220px;">
+	      <div class="modal-content" style="text-align: center;">
+		  <div class="modal-body" style="padding:40px 50px;text-align: center;">
+		<div class="loader"></div>
+		</div>
+		</div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>

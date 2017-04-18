@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="/media/images/favicon.png">
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.2/css/select.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="files/loader.css">
+	
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js">
+	</script>
+	
+	
+	
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	.modal-header, h4, .close {
+	  background-color: #5cb85c;
+	  color:white !important;
+	  text-align: center;
+	  font-size: 30px;
+	}
+	.modal-footer {
+	  background-color: #f9f9f9;
+	}
+	</style>
+	
+	
+	<script type="text/javascript" class="init">
+	
+    var uri = 'api/logs';
+	
+	$.fn.dataTable.ext.search.push(
+		function( settings, data, dataIndex ) {	 
+			var shwt=false;
+			if (data[0]=='A' && document.getElementById("showlogaccess").checked)
+				shwt= true;
+			if (data[0]=='I' && document.getElementById("showloginfo").checked)
+				shwt= true;
+			if (data[0]=='E' && document.getElementById("showlogerror").checked)
+				shwt= true;
+			if (data[0]=='U')
+				shwt= true;
+			
+			var shwd=true;
+			var showstart=document.getElementById("showlogstartdate").value;
+			var showend=document.getElementById("showlogenddate").value;
+			var mydata=formatDate2(data[1]);
+			if(!(showstart == "" || showstart == "undefined")){
+				if(Date.parse(showstart)>Date.parse(mydata))
+					shwd=false;
+			}
+			if(!(showend == "" || showend == "undefined")){
+				if(Date.parse(showend)<Date.parse(mydata))
+					shwd=false;
+			}
+				
+			
+
+			return (shwt && shwd);
+		}
+	);
+
+    $(document).ready(function () {
+      // Send an AJAX request
+		$.getJSON(uri).done(function (jsondata) {
+			
+			var table = $('#example').DataTable( {
+				dom: "Bfrtip",
+				"ajax": 'api/logs',
+				 order: [[ 1, 'asc' ]],
+				 rowId: 'log_id',
+				 "lengthMenu": [ 10, 25, 50, 75, 100 ],
+				 "columnDefs": [
+					{"className": "dt-center", "targets": "_all"}
+				],
+				columns: [
+					{ data: "log_type" },
+					{ data: "log_date" },
+					{ data: "log_source" },
+					{ data: "log_text" }
+				],
+				buttons: [
+					'selectAll',
+					'selectNone'
+				],
+				language: {
+					buttons: {
+						selectAll: "Select all items",
+						selectNone: "Select none"
+					}
+				}
+			});
+			
+			$('#showlogaccess, #showloginfo, #showlogerror').change( function() {
+				table.draw();
+			} );
+			$('#showlogstartdate, #showlogenddate').keyup( function() {
+				table.draw();
+			} );
+			
+			$("#deleteBtn").click(function(){
+				$("#deletetext").text("Delete "+ table.rows('.selected').data().length +" Logs?");
+				$("#deleteModal").modal();
+			});
+			
+
+			
+			$('#example tbody').on( 'click', 'tr', function () {
+				$(this).toggleClass('selected');
+			} );
+	
+			
+			$("#delLogsBtn").click(function(){		
+				var myids = table.rows('.selected').ids();
+				var myjson = {
+					data: []
+				}
+				for (var i = 0; i < table.rows('.selected').data().length; i++){
+					myjson.data.push({"log_id":myids[i]});
+				}			
+				//construct an HTTP request
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", "api/logs/", true);
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+				// send the collected data as JSON
+				//console.log(JSON.stringify(myjson));
+				xhr.send(JSON.stringify(myjson));
+
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == XMLHttpRequest.DONE) {
+						if(xhr.response=="OK!"){
+							$("#deleteModal").modal('hide');
+							updatePage();
+						}else{
+							alert("Error: "+xhr.response);
+						}
+					}
+				}
+			});
+			
+			function updatePage(){
+				//$.getJSON(uri, function(updateddata) {jsondata=updateddata});
+				table.ajax.reload(function ( updateddata ) {
+					jsondata=updateddata
+					//document.getElementById("deleteBtn").disabled = true;
+				});
+			}
+			
+
+        });
+    });
+	
+	
+
+	function getNodeById(id, obj){
+		for (var i = 0; i < obj.length; i++){
+		  if (obj[i].id == id){
+			return obj[i];
+		  }
+		}
+		return null;
+	}
+	function formatDate(date) {
+		var mydatetime=date.split("T");
+		var mydate=mydatetime[0].split("-");
+		return mydate[2]+"/"+mydate[1]+"/"+mydate[0]+" "+mydatetime[1]+":00";
+	}
+	function formatDate2(date) {
+		var mydatetime=date.split(" ");
+		var mydate=mydatetime[0].split("/");
+		return mydate[2]+"-"+mydate[1]+"-"+mydate[0]+"T"+(mydatetime[1].slice(0,5));
+	}
+
+	</script>
+<title>Logs Management</title>
+</head>
+<body>
+<div class="container-fluid">
+@Html.Partial("navbar", Model)
+<div class="jumbotron">
+  <div>
+	<h2 style="text-align: center;">Logs Management</h2>
+  </div>
+
+ <form role="form" class="form-horizontal">
+<div class="form-group">
+ <label class="control-label col-sm-2" style="width:unset;">Filter by Type:</label>
+ <div class="checkbox">
+	<label><input type="checkbox" value="enabled" id="showlogaccess" checked>Access &nbsp;&nbsp;</label>
+	<label><input type="checkbox" value="enabled" id="showloginfo" checked>Info &nbsp;&nbsp;</label>
+	<label><input type="checkbox" value="enabled" id="showlogerror" checked>Error &nbsp;&nbsp;</label>
+</div>
+</div>
+<div class="form-group">
+  <label class="control-label col-sm-2" style="width:unset;">Filter by Date:</label>
+  <div class="col-sm-10">          
+	<input type="datetime-local" class="form-control" id="showlogstartdate" style="width: 200px; float:left;"><h5 style="float:left;">&nbsp;&nbsp;To&nbsp;&nbsp;</h5><input type="datetime-local" class="form-control" id="showlogenddate" style="width: 200px;float:left;">
+  </div>
+</div>
+</form>
+  <div>
+  				<table id="example" class="display" cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Date and Time</th>
+							<th>From</th>
+							<th>Text</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>Type</th>
+							<th>Date and Time</th>
+							<th>From</th>
+							<th>Text</th>
+						</tr>
+					</tfoot>
+				</table>
+  </div>
+	<button type="button" class="btn btn-default btn-lg" id="deleteBtn">Delete</button>
+
+  <!-- Trigger the modal with a button -->
+
+  
+  <!-- Modal -->
+     <div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+    
+<!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-info-sign"></span> Delete Logs</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;text-align: center;">
+          <h3 id="deletetext" style="text-align: center;"></h3>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+		  
+		  <button type="submit" class="btn btn-success btn-default pull-right" id="delLogsBtn"><span class="glyphicon glyphicon-floppy-disk"></span> Delete</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="modal fade" id="loadingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="text-align: center;width:220px;">
+	      <div class="modal-content" style="text-align: center;">
+		  <div class="modal-body" style="padding:40px 50px;text-align: center;">
+		<div class="loader"></div>
+		</div>
+		</div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>

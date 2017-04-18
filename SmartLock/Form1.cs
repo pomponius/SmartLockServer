@@ -100,29 +100,11 @@ namespace SmartLock
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            int ret = myAdmin.Insert("Marco", "Pomponio", "marco", "1234", DateTime.Now, "+393922334027", 0, Guid.NewGuid().ToString());
-
-
-            textBox1.AppendText(ret.ToString());
-            textBox1.AppendText(Environment.NewLine);
-        }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            foreach (SmartLockDatabaseDataSet.Table_AdminRow row in myAdmin.GetAdminFromLogin("admin", "pass").AsEnumerable())
-            {
-                textBox1.AppendText(row.AdminID.ToString() + " " + row.AdminPassword);
-                textBox1.AppendText(Environment.NewLine);
-            }
-        }
 
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -153,28 +135,5 @@ namespace SmartLock
         }
 
 
-        /*private void button1_Click(object sender, EventArgs e)
-        {
-
-            int ret = myAdmin.Insert("Marco", "Pomponio", "marco", "1234", DateTime.Now, "+393922334027", 0, Guid.NewGuid().ToString());
-
-
-            textBox1.AppendText(ret.ToString());
-            textBox1.AppendText(Environment.NewLine);
-        }*/
-
-        /*private void button2_Click(object sender, EventArgs e)
-        {
-            //EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myQuery = from admins in myAdmin.GetData()
-            //                                                                           where admins.AdminName == "Marco"
-            //                                                                           select admins;
-            //SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
-            //myAdmin.FillbyAdminFromLogin(myDataSet.Table_Admin, "admin", "pass");
-            foreach (SmartLockDatabaseDataSet.Table_AdminRow row in myAdmin.GetAdminFromLogin("admin", "pass").AsEnumerable())
-            {
-                textBox1.AppendText(row.AdminID.ToString() + " " + row.AdminPassword);
-                textBox1.AppendText(Environment.NewLine);
-            }
-        }*/
     }
 }

@@ -2,10 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>Login</title>
+    <title>Smart Lock Login</title>
 </head>
 <body>
-<div class="modal-dialog">
+<div class="container" style="padding:40px; width:700px;">
+<div class="jumbotron">
+
 <div class="modal-body" style="padding:40px 50px;">
     <form method="POST">
 	     <div class="form-group">
@@ -25,6 +27,8 @@
     @if (Model.Errored) {
         <div id="errorBox" class="floatingError">Invalid Username or Password</div>
     }
+
+ </div>
  </div>
  </div>
 </body>
