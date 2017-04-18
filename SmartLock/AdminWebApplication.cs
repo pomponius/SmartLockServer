@@ -113,11 +113,11 @@ namespace SmartLock
                 }
 
                 var model = new AdminModel("users", myUserIdentity.AdminData.AdminID, myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
-                return View["adminuser.cshtml", model];
+                return View["adminusers.cshtml", model];
             };
 
             Get["/files/{filename}"] = args => {
-                string path = "views\\AdminWebApplication\\files\\" + args.filename;
+                string path = "Views\\AdminWebApplication\\files\\" + args.filename;
                 if (!File.Exists(path)) throw new FileNotFoundException();
                 return Response.AsFile(path);
             };
