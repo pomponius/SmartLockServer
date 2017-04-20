@@ -19,5 +19,9 @@ namespace SmartLock
         [OperationContract]
         [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, UriTemplate = "data/?id={id}")]
         string ReceiveLogs(SmartLockRESTService.Logs data, string id);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "time/?id={id}")]
+        string GetServerTime(string Id);
     }
 }

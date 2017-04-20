@@ -13,6 +13,7 @@ namespace SmartLock.Models
         public string lock_name { get; set; }
         public int lock_enable { get; set; }
         public string lock_lastseen { get; set; }
+        public string lock_registrationdate { get; set; }
         public int lock_minutesoffline { get; set; }
     }
 

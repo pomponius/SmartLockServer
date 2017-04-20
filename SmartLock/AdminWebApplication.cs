@@ -105,11 +105,14 @@ namespace SmartLock
 
                 string[,] myLocksName = new string[nlocks,2];
                 int i = 0;
-                foreach (SmartLockDatabaseDataSet.Table_LocksRow lockrow in myLockList)
+                if (myLockList != null)
                 {
-                    myLocksName[i, 0] = lockrow.LockID.ToString();
-                    myLocksName[i, 1] = lockrow.IsLockNameNull() ? lockrow.LockID.ToString() : lockrow.LockName;
-                    i++;
+                    foreach (SmartLockDatabaseDataSet.Table_LocksRow lockrow in myLockList)
+                    {
+                        myLocksName[i, 0] = lockrow.LockID.ToString();
+                        myLocksName[i, 1] = lockrow.IsLockNameNull() ? lockrow.LockID.ToString() : lockrow.LockName;
+                        i++;
+                    }
                 }
 
                 var model = new AdminModel("users", myUserIdentity.AdminData.AdminID, myUserIdentity.AdminData.AdminName, myLocksName, nlocks);
@@ -154,7 +157,9 @@ namespace SmartLock
                 this.RequiresAuthentication();
                 var myUserModel = this.Bind<AdminUserModel>();
 
-                string result = AdminDatabase.CreateNewUser(myUserModel);
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string result = AdminDatabase.CreateNewUser(myUserModel, myUserIdentity);
 
                 return result;
             };
@@ -163,13 +168,17 @@ namespace SmartLock
                 this.RequiresAuthentication();
                 var myUserModel = this.Bind<AdminUserModel>();
 
-                string result = AdminDatabase.UpdateUser(myUserModel);
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string result = AdminDatabase.UpdateUser(myUserModel, myUserIdentity);
 
                 return result;
             };
 
             Delete["api/users/{id}"] = args => {
                 this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
 
                 int parsedId = 0;
                 try
@@ -181,7 +190,7 @@ namespace SmartLock
                     return "id not parsed correctly";
                 }
 
-                string result = AdminDatabase.DeleteUser(parsedId);
+                string result = AdminDatabase.DeleteUser(parsedId, myUserIdentity);
 
                 return result;
             };
@@ -198,7 +207,7 @@ namespace SmartLock
                 {
                     foreach (SmartLockDatabaseDataSet.Table_LocksRow lockRow in myLockList)
                     {
-                        myLockListBuilder.Add(new AdminLockModel {id = lockRow.Id, lock_id = lockRow.LockID, lock_name = (lockRow.IsLockNameNull() ? null : lockRow.LockName), lock_enable=lockRow.LockEnabled, lock_lastseen = (lockRow.IsLockLastSeenNull() ? null : lockRow.LockLastSeen.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)), lock_minutesoffline = lockRow.LockMinutesOffline });
+                        myLockListBuilder.Add(new AdminLockModel {id = lockRow.Id, lock_id = lockRow.LockID, lock_name = (lockRow.IsLockNameNull() ? null : lockRow.LockName), lock_enable=lockRow.LockEnabled, lock_lastseen = (lockRow.IsLockLastSeenNull() ? null : lockRow.LockLastSeen.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)), lock_minutesoffline = lockRow.LockMinutesOffline, lock_registrationdate=lockRow.LockRegistrationDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) });
                     }
                 }
 
@@ -213,7 +222,9 @@ namespace SmartLock
                 this.RequiresAuthentication();
                 var myLockModel = this.Bind<AdminLockModel>();
 
-                string result = AdminDatabase.CreateNewLock(myLockModel);
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string result = AdminDatabase.CreateNewLock(myLockModel, myUserIdentity);
 
                 return result;
             };
@@ -222,13 +233,17 @@ namespace SmartLock
                 this.RequiresAuthentication();
                 var myLockModel = this.Bind<AdminLockModel>();
 
-                string result = AdminDatabase.UpdateLock(myLockModel);
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string result = AdminDatabase.UpdateLock(myLockModel, myUserIdentity);
 
                 return result;
             };
 
             Delete["api/locks/{id}"] = args => {
                 this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
 
                 int parsedId = 0;
                 try
@@ -240,7 +255,7 @@ namespace SmartLock
                     return "id not parsed correctly";
                 }
 
-                string result = AdminDatabase.DeleteLock(parsedId);
+                string result = AdminDatabase.DeleteLock(parsedId, myUserIdentity);
 
                 return result;
             };
@@ -274,7 +289,9 @@ namespace SmartLock
                 this.RequiresAuthentication();
                 var myAdminModel = this.Bind<AdminAdminModel>();
 
-                string result = AdminDatabase.CreateNewAdmin(myAdminModel);
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string result = AdminDatabase.CreateNewAdmin(myAdminModel, myUserIdentity);
 
                 return result;
             };
@@ -287,7 +304,7 @@ namespace SmartLock
 
                 myAdminModel.admin_id = myUserIdentity.AdminData.AdminID;
 
-                string result = AdminDatabase.UpdateAdmin(myAdminModel);
+                string result = AdminDatabase.UpdateAdmin(myAdminModel, myUserIdentity);
 
                 return result;
             };
@@ -307,7 +324,7 @@ namespace SmartLock
                     return "id not parsed correctly";
                 }
 
-                string result = AdminDatabase.DeleteAdmin(parsedId);
+                string result = AdminDatabase.DeleteAdmin(parsedId, myUserIdentity);
 
                 return result;
             };
@@ -315,8 +332,6 @@ namespace SmartLock
 
             Get["api/logs/"] = args => {
                 this.RequiresAuthentication();
-
-                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
 
                 EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> myLogList = AdminDatabase.getLogs();
 
@@ -349,7 +364,9 @@ namespace SmartLock
                 this.RequiresAuthentication();
                 var myLogListModel = this.Bind<AdminLogListModel>();
 
-                string result = AdminDatabase.DeleteLogs(myLogListModel);
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string result = AdminDatabase.DeleteLogs(myLogListModel, myUserIdentity);
 
                 return result;
             };

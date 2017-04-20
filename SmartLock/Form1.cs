@@ -21,7 +21,10 @@ namespace SmartLock
         SmartLockDatabaseDataSet myDataSet = new SmartLockDatabaseDataSet();
         SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
         SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
-        Thread newThread;
+        SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
+        Thread logThread;
+        Thread checkLocksThread;
+        List<int[]> errorLocks = new List<int[]>();
         int lastSeenLog = 0;
 
 
@@ -51,13 +54,13 @@ namespace SmartLock
             myWebHost.Open();
 
 
-            newThread = new Thread(updateTextBoxWithLogs);
-            newThread.Start();
+            logThread = new Thread(updateTextBoxWithLogs);
+            logThread.Start();
 
+            checkLocksThread = new Thread(CheckOfflineLocks);
+            checkLocksThread.Start();
 
             myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") System Started!", DateTime.Now, 2, 0);
-            //textBox1.AppendText("("+DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) +") System Started!");
-            //textBox1.AppendText(Environment.NewLine);
         }
 
         private void updateTextBoxWithLogs()
@@ -100,6 +103,71 @@ namespace SmartLock
         }
 
 
+        private void CheckOfflineLocks()
+        {
+            while (true)
+            {
+                Thread.Sleep(5000);
+                EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetData().AsEnumerable();
+                for(int i=0; i<errorLocks.Count;i++)
+                {
+                    int? p = searchlockID(errorLocks.ElementAt(i)[0], myLockList);
+                    if (!p.HasValue)
+                    {
+                        errorLocks.RemoveAt(i);
+                        i = -1;
+                    }
+                }
+                foreach (SmartLockDatabaseDataSet.Table_LocksRow mylock in myLockList)
+                {
+                    int? p = searchlockID(mylock.LockID, errorLocks);
+                    DateTime dt = (mylock.IsLockLastSeenNull()) ? mylock.LockRegistrationDate : mylock.LockLastSeen;
+                    DateTime now = DateTime.Now;
+                    if (!p.HasValue)
+                    {
+                        int t = 0;
+                        if (dt.AddMinutes(mylock.LockMinutesOffline) < now)
+                            t = (int)(now - dt).TotalMinutes;
+                        errorLocks.Add(new int[2] { mylock.LockID, t });
+                        p = searchlockID(mylock.LockID, errorLocks);
+                    }
+
+                    if (dt.AddMinutes(mylock.LockMinutesOffline + errorLocks.ElementAt((int)p)[1]) < now)
+                    {
+                        errorLocks.ElementAt((int)p)[1] += mylock.LockMinutesOffline;
+                        myLogs.Insert("[System: Error] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Lock "+ ((mylock.IsLockNameNull())? mylock.LockID.ToString(): mylock.LockName) + " is offline from "+ errorLocks.ElementAt((int)p)[1] + " minutes", DateTime.Now, 4, 0);
+                    } else if (dt.AddMinutes(mylock.LockMinutesOffline) >= now)
+                    {
+                        if(errorLocks.ElementAt((int)p)[1]!=0)
+                            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Lock " + ((mylock.IsLockNameNull()) ? mylock.LockID.ToString() : mylock.LockName) + " is back online!", DateTime.Now, 4, 0);
+                        errorLocks.ElementAt((int)p)[1] = 0;
+                    }
+
+                }
+
+            }
+        }
+
+        private int? searchlockID(int id, List<int[]> mylist)
+        {
+            for(int i=0; i< mylist.Count; i++)
+            {
+                if (mylist.ElementAt(i)[0] == id)
+                    return i;
+            }
+            return null;
+        }
+
+        private int? searchlockID(int id, EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> mylist)
+        {
+            for (int i = 0; i < mylist.Count(); i++)
+            {
+                if (mylist.ElementAt(i).LockID == id)
+                    return i;
+            }
+            return null;
+        }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
@@ -119,7 +187,8 @@ namespace SmartLock
             }
             else
             {
-                newThread.Abort();
+                logThread.Abort();
+                checkLocksThread.Abort();
             }
            
         }

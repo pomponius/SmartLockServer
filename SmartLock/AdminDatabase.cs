@@ -78,7 +78,7 @@ namespace SmartLock
             return myAdminList;
         }
 
-        public static string CreateNewUser(AdminUserModel mynewuser)
+        public static string CreateNewUser(AdminUserModel mynewuser, UserIdentity myUserIdentity)
         {
             //generate a new pin
             Random rnd = new Random();
@@ -104,12 +104,13 @@ namespace SmartLock
                     myPermissions.Insert(instertedID, Int32.Parse(ml));
                 }
             }
-            
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " created a new user " + mynewuser.user_name  + " " + mynewuser.user_surname, DateTime.Now, 2, 0);
 
             return "OK!";
         }
 
-        public static string CreateNewLock(AdminLockModel mynewlock)
+        public static string CreateNewLock(AdminLockModel mynewlock, UserIdentity myUserIdentity)
         {
             if (mynewlock.lock_id < 1)
                 return "ID must be >0";
@@ -119,12 +120,14 @@ namespace SmartLock
             if (myLockList.Count() != 0)
                 return "ID already present";
 
-            myLocks.Insert(mynewlock.lock_id, mynewlock.lock_name, mynewlock.lock_enable, null, mynewlock.lock_minutesoffline);
+            myLocks.Insert(mynewlock.lock_id, mynewlock.lock_name, mynewlock.lock_enable, null, mynewlock.lock_minutesoffline, DateTime.Now);
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " created a new lock " + mynewlock.lock_name  + " ID: " + mynewlock.lock_id, DateTime.Now, 2, 0);
 
             return "OK!";
         }
 
-        public static string CreateNewAdmin(AdminAdminModel mynewadmin)
+        public static string CreateNewAdmin(AdminAdminModel mynewadmin, UserIdentity myUserIdentity)
         {
             int log = 0;
             if (mynewadmin.admin_logaccess == 1)
@@ -136,12 +139,14 @@ namespace SmartLock
 
             myAdmin.Insert(mynewadmin.admin_name, mynewadmin.admin_surname, mynewadmin.admin_login, mynewadmin.admin_password, DateTime.Now, mynewadmin.admin_phone, log, Guid.NewGuid().ToString());
 
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " created a new admin " + mynewadmin.admin_name + " " + mynewadmin.admin_surname, DateTime.Now, 2, 0);
+
             return "OK!";
         }
 
 
 
-        public static string UpdateUser(AdminUserModel myuser)
+        public static string UpdateUser(AdminUserModel myuser, UserIdentity myUserIdentity)
         {
 
             myUsers.UpdateUser(myuser.user_name, myuser.user_surname, myuser.user_address, myuser.user_city, myuser.user_region, myuser.user_postalcode, myuser.user_country, myuser.user_phone, myuser.user_mail, myuser.user_cardtype, myuser.user_cardid, DateTime.ParseExact(myuser.user_pinstart, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), DateTime.ParseExact(myuser.user_pinexpire, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), myuser.user_cardenable, myuser.user_id);
@@ -155,17 +160,22 @@ namespace SmartLock
                 }
             }
 
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " updated user " + myuser.user_name + " " + myuser.user_surname, DateTime.Now, 2, 0);
+
             return "OK!";
         }
 
 
-        public static string UpdateLock(AdminLockModel mylock)
+        public static string UpdateLock(AdminLockModel mylock, UserIdentity myUserIdentity)
         {
             myLocks.UpdateLock(mylock.lock_name, mylock.lock_enable, mylock.lock_minutesoffline, mylock.id);
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " updated lock " + mylock.lock_name + " ID: " + mylock.lock_id, DateTime.Now, 2, 0);
+
             return "OK!";
         }
 
-        public static string UpdateAdmin(AdminAdminModel myadmin)
+        public static string UpdateAdmin(AdminAdminModel myadmin, UserIdentity myUserIdentity)
         {
             int log = 0;
             if (myadmin.admin_logaccess == 1)
@@ -176,39 +186,71 @@ namespace SmartLock
                 log += 4;
 
             myAdmin.UpdateAdmin(myadmin.admin_name, myadmin.admin_surname, myadmin.admin_login, myadmin.admin_password, myadmin.admin_phone, log, myadmin.admin_id);
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " updated his account", DateTime.Now, 2, 0);
+
             return "OK!";
         }
 
 
-        public static string DeleteUser(int id)
+        public static string DeleteUser(int id, UserIdentity myUserIdentity)
         {
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetDataByUserID(id).AsEnumerable();
+            if (myUserList == null)
+                return "ID not present";
+            if (myUserList.Count() == 0)
+                return "ID not present";
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " deleted user " + myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname, DateTime.Now, 2, 0);
+
             myUsers.DeleteByUserID(id);
             myPermissions.DeletePermissions(id);
+
             return "OK!";
         }
 
-        public static string DeleteLock(int id)
+        public static string DeleteLock(int id, UserIdentity myUserIdentity)
         {
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetByID(id).AsEnumerable();
+            if (myLockList == null)
+                return "ID not present";
+            if (myLockList.Count() == 0)
+                return "ID not present";
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " deleted lock " + myLockList.ElementAt(0).LockName + " ID: " + myLockList.ElementAt(0).LockID, DateTime.Now, 2, 0);
+
             myLocks.DeleteByLockID(id);
             myPermissions.DeleteLocks(id);
             return "OK!";
         }
 
-        public static string DeleteAdmin(int id)
+        public static string DeleteAdmin(int id, UserIdentity myUserIdentity)
         {
             EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myAdminList = myAdmin.GetData().AsEnumerable();
             if (myAdminList.Count() == 1)
                 return "At leat one Admin must be present!";
+
+            myAdminList = myAdmin.GetDataByAdminID(id).AsEnumerable();
+            if (myAdminList == null)
+                return "ID not present";
+            if (myAdminList.Count() == 0)
+                return "ID not present";
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " deleted admin " + myAdminList.ElementAt(0).AdminName + " " + myAdminList.ElementAt(0).AdminSurname, DateTime.Now, 2, 0);
+
             myAdmin.DeleteByAdminID(id);
             return "OK!";
         }
 
-        public static string DeleteLogs(AdminLogListModel myloglist)
+        public static string DeleteLogs(AdminLogListModel myloglist, UserIdentity myUserIdentity)
         {
             foreach (AdminLogModel mylog in myloglist.data)
             {
                 myLogs.DeleteByLogID(mylog.log_id);
             }
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " deleted " + myloglist.data.Count + " log" + ((myloglist.data.Count==1)?"":"s"), DateTime.Now, 2, 0);
+
             return "OK!";
         }
 
@@ -223,6 +265,7 @@ namespace SmartLock
             if (Rows.Count() == 0)
                 return null;
 
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + Rows.ElementAt(0).AdminName+" "+ Rows.ElementAt(0).AdminSurname + " connected to the management web service", DateTime.Now, 2, 0);
 
             return new Guid(Rows.ElementAt(0).AdminGuid);
         }

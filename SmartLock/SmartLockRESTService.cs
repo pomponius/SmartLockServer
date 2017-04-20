@@ -48,6 +48,8 @@ namespace SmartLock
             myLocks.UpdateLockLastSeen(DateTime.Now, myLock.Id);
             myLocks.Update(myDataSet.Table_Locks);
 
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Lock " + (myLock.IsLockNameNull() ? myLock.LockID.ToString() : myLock.LockName) + " asked for allowed user list", DateTime.Now, 2, 0);
+
             List<UserForLock> myUserList = new List<UserForLock>();
 
             if (myLock.LockEnabled == 0)
@@ -67,6 +69,7 @@ namespace SmartLock
 
 
             AllowedUsersForLocks myAllowedUsers = new AllowedUsersForLocks { AllowedUsers = myUserList };
+
             return myAllowedUsers;
         }
 
@@ -196,7 +199,36 @@ namespace SmartLock
                 myLogs.Insert(l.Text, l.DateTime, l.Type, l.ID);
             }
 
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Logs of lock " + (myLock.IsLockNameNull() ? myLock.LockID.ToString() : myLock.LockName) + " has been loaded", DateTime.Now, 2, 0);
+
             return "OK!";
+        }
+
+        public string GetServerTime(string Id)
+        {
+            //Check if ID is present
+            int parsedId = 0;
+            try
+            {
+                parsedId = Int32.Parse(Id);
+            }
+            catch
+            {
+                return null;
+            }
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetByID(parsedId).AsEnumerable();
+            if (myLockList == null)
+                return "Error: ID not present!";
+            if (myLockList.Count() == 0)
+                return "Error: ID not present!";
+
+            SmartLockDatabaseDataSet.Table_LocksRow myLock = myLockList.ElementAt(0);
+            myLocks.UpdateLockLastSeen(DateTime.Now, myLock.Id);
+            myLocks.Update(myDataSet.Table_Locks);
+
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Lock " + (myLock.IsLockNameNull() ? myLock.LockID.ToString() : myLock.LockName) + " asked for server time", DateTime.Now, 2, 0);
+
+            return DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
         }
 
 
