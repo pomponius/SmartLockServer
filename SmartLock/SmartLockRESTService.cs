@@ -10,7 +10,7 @@ using System.Data;
 
 namespace SmartLock
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single,ConcurrencyMode = ConcurrencyMode.Single, IncludeExceptionDetailInFaults = true)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single, IncludeExceptionDetailInFaults = true)]
     public class SmartLockRESTService : ISmartLockRESTService
     {
         SmartLockDatabaseDataSet myDataSet = new SmartLockDatabaseDataSet();
@@ -85,7 +85,7 @@ namespace SmartLock
             {
                 return "Error: ID is not a number";
             }
-            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList= myLocks.GetByID(parsedId).AsEnumerable();
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LocksRow> myLockList = myLocks.GetByID(parsedId).AsEnumerable();
             if (myLockList == null)
                 return "Error: ID not present";
             if (myLockList.Count() == 0)
@@ -100,109 +100,124 @@ namespace SmartLock
             if (data.Log == null)
                 return "Error: JSON not correct";
 
-            //Check Data
-            foreach (SingleLog mlog in data.Log)
-            {
-                if (!(mlog.Type == 1 || mlog.Type == 2 || mlog.Type == 4))
-                    return "Error: Wrong Type specified (1, 2 or 4 allowed)";
-                if (mlog.Type == 1 && mlog.Pin == null && mlog.CardID == null)
-                    return "Error: For Type 'Access' Pin or CardID must be specified";
-                if (mlog.DateTime == null)
-                    return "Error: DateTime not specified";
-            }
 
-            //Create logs to store in database
-            List<DatabaseLog> prepareLogs = new List<DatabaseLog>();
+            string response = "";
             int i = 0;
+            int correct = 0;
+            int errors = 0;
             foreach (SingleLog mlog in data.Log)
             {
                 i++;
-                string myText = "";
-                if (myLock.LockName == null)
-                    myText = "[" + myLock.LockID + ": ";
+                string res = CheckComingLogs(mlog, myLock);
+                if (res == "OK!")
+                    correct++;
                 else
-                    myText = "[" + myLock.LockName + ": ";
+                    errors++;
+                response += "Log n. "+i+" "+ res + Environment.NewLine;
+            }
 
-                if (mlog.Type == 1)
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Logs of lock " + (myLock.IsLockNameNull() ? myLock.LockID.ToString() : myLock.LockName) + " has been loaded ("+errors+" errors, "+correct+" correct)", DateTime.Now, 2, 0);
+
+            return response;
+        }
+
+
+        private string CheckComingLogs(SingleLog mlog, SmartLockDatabaseDataSet.Table_LocksRow myLock)
+        {
+            //Check Data
+            if (!(mlog.Type == 1 || mlog.Type == 2 || mlog.Type == 4))
+                return "Error: Wrong Type specified (1, 2 or 4 allowed)";
+            if (mlog.Type == 1 && mlog.Pin == null && mlog.CardID == null)
+                return "Error: For Type 'Access' Pin or CardID must be specified";
+            if (mlog.DateTime == null)
+                return "Error: DateTime not specified";
+
+
+
+            string myText = "";
+            if (myLock.IsLockNameNull())
+                myText = "[" + myLock.LockID + ": ";
+            else
+                myText = "[" + myLock.LockName + ": ";
+
+            if (mlog.Type == 1)
+            {
+                string userpin = null;
+                if (mlog.CardID == null && mlog.Pin != null)
                 {
-                    if (mlog.CardID == null && mlog.Pin != null)
-                    {
-                        EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetByPin(mlog.Pin).AsEnumerable();
-                        if (myUserList == null)
-                            return "Error log "+i+": User not present";
-                        if (myUserList.Count() == 0)
-                            return "Error log " + i + ": User not present";
-                        myText += "Access of "+ myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname  + " using Pin] ";
-                    }
-                    else if (mlog.Pin == null && mlog.CardID != null)
-                    {
-                        EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetByCardID(mlog.CardID).AsEnumerable();
-                        if (myUserList == null)
-                            return "Error log " + i + ": User not present";
-                        if (myUserList.Count() == 0)
-                            return "Error log " + i + ": User not present";
-                        myText += "Access of " + myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname + " using Card] ";
-                    }
-                    else
-                    {
-                        EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetByPin(mlog.Pin).AsEnumerable();
-                        if (myUserList == null)
-                            return "Error log " + i + ": User not present";
-                        if (myUserList.Count() == 0)
-                            return "Error log " + i + ": User not present";
+                    EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetByPin(mlog.Pin).AsEnumerable();
+                    if (myUserList == null)
+                        return "Error: User not present";
+                    if (myUserList.Count() == 0)
+                        return "Error: User not present";
 
-                        myUsers.UpdateCardIDbyPin(mlog.CardID, mlog.Pin);
-                        
-
-                        myText += "Access of " + myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname + " using Pin and CardID added] ";
-                    }
-
-                    DateTime parsedAccess;
-                    try
-                    {
-                        parsedAccess = DateTime.ParseExact(mlog.DateTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        return "Error log " + i + ": DateTime incorrect format. must be dd/MM/yyyy HH:mm:ss";
-                    }
-                    myUsers.UpdateLastAccessbyPin(parsedAccess, mlog.Pin);
-                    myUsers.Update(myDataSet.Table_User);
-
-
+                    myText += "Access of " + myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname + " using Pin] ";
+                    userpin = myUserList.ElementAt(0).UserPin;
                 }
-                else if(mlog.Type == 2)
-                    myText += "Info] ";
+                else if (mlog.Pin == null && mlog.CardID != null)
+                {
+                    EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetByCardID(mlog.CardID).AsEnumerable();
+                    if (myUserList == null)
+                        return "Error: User not present";
+                    if (myUserList.Count() == 0)
+                        return "Error: User not present";
+
+                    myText += "Access of " + myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname + " using Card] ";
+                    userpin = myUserList.ElementAt(0).UserPin;
+                }
                 else
-                    myText += "Error] ";
+                {
+                    EnumerableRowCollection<SmartLockDatabaseDataSet.Table_UserRow> myUserList = myUsers.GetByPin(mlog.Pin).AsEnumerable();
+                    if (myUserList == null)
+                        return "Error: User not present";
+                    if (myUserList.Count() == 0)
+                        return "Error: User not present";
 
+                    myUsers.UpdateCardIDbyPin(mlog.CardID, mlog.Pin);
 
-                DateTime parsedDateTime;
+                    myText += "Access of " + myUserList.ElementAt(0).UserName + " " + myUserList.ElementAt(0).UserSurname + " using Pin and CardID added] ";
+                    userpin = myUserList.ElementAt(0).UserPin;
+                }
+
+                DateTime parsedAccess;
                 try
                 {
-                    parsedDateTime = DateTime.ParseExact(mlog.DateTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    parsedAccess = DateTime.ParseExact(mlog.DateTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                 }
                 catch
                 {
-                    return "Error log " + i + ": DateTime incorrect format. must be dd/MM/yyyy HH:mm:ss";
+                    return "Error: DateTime incorrect format. must be dd/MM/yyyy HH:mm:ss";
                 }
+                myUsers.UpdateLastAccessbyPin(parsedAccess, userpin);
+                myUsers.Update(myDataSet.Table_User);
 
-                myText += "(" + mlog.DateTime + ")";
-                if(mlog.Text!=null)
-                    myText += " "+ mlog.Text;
 
-                prepareLogs.Add(new DatabaseLog { Type = mlog.Type, Text = myText, ID=myLock.LockID , DateTime = parsedDateTime });
             }
+            else if (mlog.Type == 2)
+                myText += "Info] ";
+            else
+                myText += "Error] ";
 
-            foreach(DatabaseLog l in prepareLogs)
+
+            DateTime parsedDateTime;
+            try
             {
-                myLogs.Insert(l.Text, l.DateTime, l.Type, l.ID);
+                parsedDateTime = DateTime.ParseExact(mlog.DateTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return "Error: DateTime incorrect format. must be dd/MM/yyyy HH:mm:ss";
             }
 
-            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Logs of lock " + (myLock.IsLockNameNull() ? myLock.LockID.ToString() : myLock.LockName) + " has been loaded", DateTime.Now, 2, 0);
+            myText += "(" + mlog.DateTime + ")";
+            if (mlog.Text != null)
+                myText += " " + mlog.Text;
+
+            myLogs.Insert(myText, parsedDateTime, mlog.Type, myLock.LockID);
 
             return "OK!";
         }
+
 
         public string GetServerTime(string Id)
         {
