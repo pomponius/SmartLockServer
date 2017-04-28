@@ -61,6 +61,17 @@ namespace SmartLock
             checkLocksThread.Start();
 
             myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") System Started!", DateTime.Now, 2, 0);
+
+            testApiAsync();
+
+
+        }
+
+        static async void testApiAsync()
+        {
+            var Bot = new Telegram.Bot.TelegramBotClient("283245169:AAE-PZc_i6IpphuR7AGed9AtWEzEDYL9oWw");
+            var me = await Bot.GetMeAsync();
+            System.Console.WriteLine("Hello my name is " + me.FirstName);
         }
 
         private void updateTextBoxWithLogs()
