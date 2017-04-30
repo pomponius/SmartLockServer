@@ -13,6 +13,8 @@ using Nancy.Hosting.Wcf;
 using System.Timers;
 using System.Threading;
 using System.Globalization;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartLock
 {
@@ -26,6 +28,9 @@ namespace SmartLock
         Thread checkLocksThread;
         List<int[]> errorLocks = new List<int[]>();
         int lastSeenLog = 0;
+
+        Telegram.Bot.TelegramBotClient Bot;
+        int BotEnabled = 0;
 
 
         public Form1()
@@ -62,29 +67,92 @@ namespace SmartLock
 
             myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") System Started!", DateTime.Now, 2, 0);
 
-            testApiAsync();
-
 
         }
 
-        static async void testApiAsync()
+
+        private async void updateTextBoxWithLogs()
         {
-            var Bot = new Telegram.Bot.TelegramBotClient("283245169:AAE-PZc_i6IpphuR7AGed9AtWEzEDYL9oWw");
+            string[] lines = System.IO.File.ReadAllLines("BotTelegram.txt");
+
+            BotEnabled = Int32.Parse(lines[1]);
+            if (BotEnabled==1)
+            {
+                Bot = new Telegram.Bot.TelegramBotClient(lines[0]);
+            }
             var me = await Bot.GetMeAsync();
             System.Console.WriteLine("Hello my name is " + me.FirstName);
-        }
+            var botoffset = 0;
 
-        private void updateTextBoxWithLogs()
-        {
-            while(true)
+
+            
+            while (true)
                 {
+
+                string[] newlines = System.IO.File.ReadAllLines("BotTelegram.txt");
+
+                BotEnabled = Int32.Parse(newlines[1]);
+                if (BotEnabled == 1)
+                {
+                    if (newlines[0] != lines[0])
+                    {
+                        lines[0] = newlines[0];
+                        Bot = new Telegram.Bot.TelegramBotClient(lines[0]);
+                    }
+                }
+
+                if (BotEnabled == 1)
+                {
+                    var updates = await Bot.GetUpdatesAsync(botoffset);
+                    foreach (var update in updates)
+                    {
+                        switch (update.Type)
+                        {
+                            case Telegram.Bot.Types.Enums.UpdateType.MessageUpdate:
+                                var message = update.Message;
+
+                                switch (message.Type)
+                                {
+                                    case Telegram.Bot.Types.Enums.MessageType.TextMessage:
+
+                                        if (message.Text == "/start")
+                                        {
+                                            var rkm = new ReplyKeyboardMarkup(new KeyboardButton[] { new KeyboardButton("Send Phone Number") { RequestContact = true } }, true, true);
+                                            await Bot.SendTextMessageAsync(message.Chat.Id, "Hello! I'm " + me.FirstName + ".\nSend your contact in order to register on the system", replyToMessageId: message.MessageId, replyMarkup: rkm);
+                                        }
+                                        break;
+                                    case Telegram.Bot.Types.Enums.MessageType.ContactMessage:
+                                        EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> madmins = myAdmin.GetDataByPhoneNumber("+" + message.Contact.PhoneNumber).AsEnumerable();
+                                        if (madmins == null)
+                                        {
+                                            await Bot.SendTextMessageAsync(message.Chat.Id, "I didn't find your number");
+                                            break;
+                                        }
+                                        if (madmins.Count() == 0)
+                                        {
+                                            await Bot.SendTextMessageAsync(message.Chat.Id, "I didn't find your number");
+                                            break;
+                                        }
+                                        Console.WriteLine("Contact Received: " + message.Contact.PhoneNumber);
+                                        myAdmin.UpdateChatId(message.Chat.Id, madmins.ElementAt(0).AdminID);
+                                        await Bot.SendTextMessageAsync(message.Chat.Id, "I've received your account, now you will receive the selected logs");
+                                        break;
+                                }
+                                break;
+                        }
+                        botoffset = update.Id + 1;
+                    }
+                }
+
+
+
                 Thread.Sleep(500);
                 this.updatemyTextBoxWithLogs();
             }
         }
 
         delegate void SetTextCallback();
-        private void updatemyTextBoxWithLogs()
+        private async void updatemyTextBoxWithLogs()
         {
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
@@ -101,8 +169,38 @@ namespace SmartLock
                     return;
                 if (myNewLogs.Count() == 0)
                     return;
-                
-                foreach(SmartLockDatabaseDataSet.Table_LogRow mlog in myNewLogs)
+
+                if (BotEnabled == 1)
+                {
+                    EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> myadmins = myAdmin.GetData().AsEnumerable();
+                    foreach (SmartLockDatabaseDataSet.Table_AdminRow myadmin in myadmins)
+                    {
+                        if (!myadmin.IsAdminChatIdNull())
+                        {
+                            foreach (SmartLockDatabaseDataSet.Table_LogRow mlog in myNewLogs)
+                            {
+                                if ((mlog.LogType & myadmin.AdminLogType) != 0)
+                                {
+                                    try
+                                    {
+                                        await Bot.SendTextMessageAsync(myadmin.AdminChatId, mlog.LogText);
+                                    }
+                                    catch (Telegram.Bot.Exceptions.ApiRequestException e)
+                                    {
+                                        if (e.Message == "Forbidden: bot was blocked by the user")
+                                        {
+                                            myAdmin.UpdateChatId(null, myadmin.AdminID);
+                                            System.Console.WriteLine("chat id deleted");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                foreach (SmartLockDatabaseDataSet.Table_LogRow mlog in myNewLogs)
                 {
                     textBox1.AppendText(mlog.LogText);
                     textBox1.AppendText(Environment.NewLine);

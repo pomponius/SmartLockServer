@@ -18,6 +18,7 @@ namespace SmartLock.Models
         public int admin_loginfo { get; set; }
         public int admin_logaccess { get; set; }
         public int admin_logerror { get; set; }
+        public int admin_logservicestate { get; set; }
     }
 
     public class AdminAdminListModel

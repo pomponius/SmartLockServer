@@ -437,6 +437,8 @@ namespace SmartLock {
             
             private global::System.Data.DataColumn columnAdminGuid;
             
+            private global::System.Data.DataColumn columnAdminChatId;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public Table_AdminDataTable() {
@@ -544,6 +546,14 @@ namespace SmartLock {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AdminChatIdColumn {
+                get {
+                    return this.columnAdminChatId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -579,7 +589,7 @@ namespace SmartLock {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_AdminRow AddTable_AdminRow(string AdminName, string AdminSurname, string AdminLogin, string AdminPassword, System.DateTime AdminRegistrationDate, string AdminPhone, int AdminLogType, string AdminGuid) {
+            public Table_AdminRow AddTable_AdminRow(string AdminName, string AdminSurname, string AdminLogin, string AdminPassword, System.DateTime AdminRegistrationDate, string AdminPhone, int AdminLogType, string AdminGuid, long AdminChatId) {
                 Table_AdminRow rowTable_AdminRow = ((Table_AdminRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -590,7 +600,8 @@ namespace SmartLock {
                         AdminRegistrationDate,
                         AdminPhone,
                         AdminLogType,
-                        AdminGuid};
+                        AdminGuid,
+                        AdminChatId};
                 rowTable_AdminRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTable_AdminRow);
                 return rowTable_AdminRow;
@@ -629,6 +640,7 @@ namespace SmartLock {
                 this.columnAdminPhone = base.Columns["AdminPhone"];
                 this.columnAdminLogType = base.Columns["AdminLogType"];
                 this.columnAdminGuid = base.Columns["AdminGuid"];
+                this.columnAdminChatId = base.Columns["AdminChatId"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -652,6 +664,8 @@ namespace SmartLock {
                 base.Columns.Add(this.columnAdminLogType);
                 this.columnAdminGuid = new global::System.Data.DataColumn("AdminGuid", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAdminGuid);
+                this.columnAdminChatId = new global::System.Data.DataColumn("AdminChatId", typeof(long), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdminChatId);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnAdminID}, true));
                 this.columnAdminID.AutoIncrement = true;
@@ -2415,6 +2429,34 @@ namespace SmartLock {
                     this[this.tableTable_Admin.AdminGuidColumn] = value;
                 }
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public long AdminChatId {
+                get {
+                    try {
+                        return ((long)(this[this.tableTable_Admin.AdminChatIdColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Il valore della colonna \'AdminChatId\' nella tabella \'Table_Admin\' è DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTable_Admin.AdminChatIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAdminChatIdNull() {
+                return this.IsNull(this.tableTable_Admin.AdminChatIdColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAdminChatIdNull() {
+                this[this.tableTable_Admin.AdminChatIdColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -3331,10 +3373,11 @@ namespace SmartLock.SmartLockDatabaseDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("AdminPhone", "AdminPhone");
             tableMapping.ColumnMappings.Add("AdminLogType", "AdminLogType");
             tableMapping.ColumnMappings.Add("AdminGuid", "AdminGuid");
+            tableMapping.ColumnMappings.Add("AdminChatId", "AdminChatId");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [Table_Admin] WHERE (([AdminID] = @Original_AdminID) AND ([AdminName] = @Original_AdminName) AND ([AdminSurname] = @Original_AdminSurname) AND ([AdminLogin] = @Original_AdminLogin) AND ([AdminPassword] = @Original_AdminPassword) AND ([AdminRegistrationDate] = @Original_AdminRegistrationDate) AND ([AdminPhone] = @Original_AdminPhone) AND ([AdminLogType] = @Original_AdminLogType) AND ([AdminGuid] = @Original_AdminGuid))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [Table_Admin] WHERE (([AdminID] = @Original_AdminID) AND ([AdminName] = @Original_AdminName) AND ([AdminSurname] = @Original_AdminSurname) AND ([AdminLogin] = @Original_AdminLogin) AND ([AdminPassword] = @Original_AdminPassword) AND ([AdminRegistrationDate] = @Original_AdminRegistrationDate) AND ([AdminPhone] = @Original_AdminPhone) AND ([AdminLogType] = @Original_AdminLogType) AND ([AdminGuid] = @Original_AdminGuid) AND ((@IsNull_AdminChatId = 1 AND [AdminChatId] IS NULL) OR ([AdminChatId] = @Original_AdminChatId)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminName", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -3345,10 +3388,12 @@ namespace SmartLock.SmartLockDatabaseDataSetTableAdapters {
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminPhone", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminLogType", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogType", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminGuid", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminGuid", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_AdminChatId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminChatId", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [Table_Admin] ([AdminName], [AdminSurname], [AdminLogin], [AdminPassword], [AdminRegistrationDate], [AdminPhone], [AdminLogType], [AdminGuid]) VALUES (@AdminName, @AdminSurname, @AdminLogin, @AdminPassword, @AdminRegistrationDate, @AdminPhone, @AdminLogType, @AdminGuid);
-SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistrationDate, AdminPhone, AdminLogType, AdminGuid FROM Table_Admin WHERE (AdminID = SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [Table_Admin] ([AdminName], [AdminSurname], [AdminLogin], [AdminPassword], [AdminRegistrationDate], [AdminPhone], [AdminLogType], [AdminGuid], [AdminChatId]) VALUES (@AdminName, @AdminSurname, @AdminLogin, @AdminPassword, @AdminRegistrationDate, @AdminPhone, @AdminLogType, @AdminGuid, @AdminChatId);
+SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistrationDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin WHERE (AdminID = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminSurname", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -3358,10 +3403,11 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminPhone", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminLogType", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogType", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminGuid", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminGuid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminChatId", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [Table_Admin] SET [AdminName] = @AdminName, [AdminSurname] = @AdminSurname, [AdminLogin] = @AdminLogin, [AdminPassword] = @AdminPassword, [AdminRegistrationDate] = @AdminRegistrationDate, [AdminPhone] = @AdminPhone, [AdminLogType] = @AdminLogType, [AdminGuid] = @AdminGuid WHERE (([AdminID] = @Original_AdminID) AND ([AdminName] = @Original_AdminName) AND ([AdminSurname] = @Original_AdminSurname) AND ([AdminLogin] = @Original_AdminLogin) AND ([AdminPassword] = @Original_AdminPassword) AND ([AdminRegistrationDate] = @Original_AdminRegistrationDate) AND ([AdminPhone] = @Original_AdminPhone) AND ([AdminLogType] = @Original_AdminLogType) AND ([AdminGuid] = @Original_AdminGuid));
-SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistrationDate, AdminPhone, AdminLogType, AdminGuid FROM Table_Admin WHERE (AdminID = @AdminID)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [Table_Admin] SET [AdminName] = @AdminName, [AdminSurname] = @AdminSurname, [AdminLogin] = @AdminLogin, [AdminPassword] = @AdminPassword, [AdminRegistrationDate] = @AdminRegistrationDate, [AdminPhone] = @AdminPhone, [AdminLogType] = @AdminLogType, [AdminGuid] = @AdminGuid, [AdminChatId] = @AdminChatId WHERE (([AdminID] = @Original_AdminID) AND ([AdminName] = @Original_AdminName) AND ([AdminSurname] = @Original_AdminSurname) AND ([AdminLogin] = @Original_AdminLogin) AND ([AdminPassword] = @Original_AdminPassword) AND ([AdminRegistrationDate] = @Original_AdminRegistrationDate) AND ([AdminPhone] = @Original_AdminPhone) AND ([AdminLogType] = @Original_AdminLogType) AND ([AdminGuid] = @Original_AdminGuid) AND ((@IsNull_AdminChatId = 1 AND [AdminChatId] IS NULL) OR ([AdminChatId] = @Original_AdminChatId)));
+SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistrationDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin WHERE (AdminID = @AdminID)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminSurname", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -3371,6 +3417,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminPhone", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminLogType", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogType", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminGuid", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminGuid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminChatId", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminName", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminSurname", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminSurname", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -3380,6 +3427,8 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminPhone", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminLogType", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogType", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminGuid", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminGuid", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_AdminChatId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminChatId", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
@@ -3393,11 +3442,11 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[6];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[8];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistra" +
-                "tionDate, AdminPhone, AdminLogType, AdminGuid FROM Table_Admin";
+                "tionDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
@@ -3406,38 +3455,53 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[2].Connection = this.Connection;
-            this._commandCollection[2].CommandText = "SELECT        Table_Admin.*\r\nFROM            Table_Admin\r\nWHERE        (AdminGuid" +
-                " = @guid)";
+            this._commandCollection[2].CommandText = "SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistra" +
+                "tionDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin WHER" +
+                "E (AdminGuid = @guid)";
             this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@guid", global::System.Data.SqlDbType.NChar, 36, global::System.Data.ParameterDirection.Input, 0, 0, "AdminGuid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[3] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[3].Connection = this.Connection;
-            this._commandCollection[3].CommandText = "SELECT        Table_Admin.*\r\nFROM            Table_Admin\r\nWHERE        (AdminLogi" +
-                "n = @username) AND (AdminPassword = @password)";
+            this._commandCollection[3].CommandText = "SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistra" +
+                "tionDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin WHER" +
+                "E (AdminLogin = @username) AND (AdminPassword = @password)";
             this._commandCollection[3].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@username", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogin", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@password", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPassword", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[4] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[4].Connection = this.Connection;
             this._commandCollection[4].CommandText = "SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistra" +
-                "tionDate, AdminPhone, AdminLogType, AdminGuid FROM Table_Admin WHERE (AdminID=@A" +
-                "dminID)";
+                "tionDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin WHER" +
+                "E (AdminID = @AdminID)";
             this._commandCollection[4].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[5] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[5].Connection = this.Connection;
-            this._commandCollection[5].CommandText = "UPDATE [Table_Admin] SET [AdminName] = @AdminName, [AdminSurname] = @AdminSurname" +
+            this._commandCollection[5].CommandText = "SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistra" +
+                "tionDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId FROM Table_Admin WHER" +
+                "E (AdminPhone = @Phone)";
+            this._commandCollection[5].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Phone", global::System.Data.SqlDbType.NChar, 24, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[6].Connection = this.Connection;
+            this._commandCollection[6].CommandText = "UPDATE [Table_Admin] SET [AdminName] = @AdminName, [AdminSurname] = @AdminSurname" +
                 ", [AdminLogin] = @AdminLogin, [AdminPassword] = @AdminPassword, [AdminPhone] = @" +
                 "AdminPhone, [AdminLogType] = @AdminLogType WHERE ([AdminID] = @Original_AdminID)" +
                 ";";
-            this._commandCollection[5].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminName", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminSurname", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminLogin", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogin", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminPassword", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPassword", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminPhone", global::System.Data.SqlDbType.NChar, 24, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminLogType", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogType", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[6].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminName", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminSurname", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminSurname", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminLogin", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogin", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminPassword", global::System.Data.SqlDbType.NVarChar, 30, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPassword", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminPhone", global::System.Data.SqlDbType.NChar, 24, global::System.Data.ParameterDirection.Input, 0, 0, "AdminPhone", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminLogType", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminLogType", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_AdminID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[7] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[7].Connection = this.Connection;
+            this._commandCollection[7].CommandText = "UPDATE [Table_Admin] SET AdminChatId = @AdminChatId WHERE AdminID = @AdminID";
+            this._commandCollection[7].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[7].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminChatId", global::System.Data.SqlDbType.BigInt, 8, global::System.Data.ParameterDirection.Input, 0, 0, "AdminChatId", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[7].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AdminID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "AdminID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3577,6 +3641,23 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual SmartLockDatabaseDataSet.Table_AdminDataTable GetDataByPhoneNumber(string Phone) {
+            this.Adapter.SelectCommand = this.CommandCollection[5];
+            if ((Phone == null)) {
+                throw new global::System.ArgumentNullException("Phone");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(Phone));
+            }
+            SmartLockDatabaseDataSet.Table_AdminDataTable dataTable = new SmartLockDatabaseDataSet.Table_AdminDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         public virtual int Update(SmartLockDatabaseDataSet.Table_AdminDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
@@ -3607,7 +3688,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_AdminID, string Original_AdminName, string Original_AdminSurname, string Original_AdminLogin, string Original_AdminPassword, System.DateTime Original_AdminRegistrationDate, string Original_AdminPhone, int Original_AdminLogType, string Original_AdminGuid) {
+        public virtual int Delete(int Original_AdminID, string Original_AdminName, string Original_AdminSurname, string Original_AdminLogin, string Original_AdminPassword, System.DateTime Original_AdminRegistrationDate, string Original_AdminPhone, int Original_AdminLogType, string Original_AdminGuid, global::System.Nullable<long> Original_AdminChatId) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_AdminID));
             if ((Original_AdminName == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminName");
@@ -3647,6 +3728,14 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             else {
                 this.Adapter.DeleteCommand.Parameters[8].Value = ((string)(Original_AdminGuid));
             }
+            if ((Original_AdminChatId.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((long)(Original_AdminChatId.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -3667,7 +3756,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string AdminName, string AdminSurname, string AdminLogin, string AdminPassword, System.DateTime AdminRegistrationDate, string AdminPhone, int AdminLogType, string AdminGuid) {
+        public virtual int Insert(string AdminName, string AdminSurname, string AdminLogin, string AdminPassword, System.DateTime AdminRegistrationDate, string AdminPhone, int AdminLogType, string AdminGuid, global::System.Nullable<long> AdminChatId) {
             if ((AdminName == null)) {
                 throw new global::System.ArgumentNullException("AdminName");
             }
@@ -3706,6 +3795,12 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             else {
                 this.Adapter.InsertCommand.Parameters[7].Value = ((string)(AdminGuid));
             }
+            if ((AdminChatId.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[8].Value = ((long)(AdminChatId.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -3735,6 +3830,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
                     string AdminPhone, 
                     int AdminLogType, 
                     string AdminGuid, 
+                    global::System.Nullable<long> AdminChatId, 
                     int Original_AdminID, 
                     string Original_AdminName, 
                     string Original_AdminSurname, 
@@ -3744,6 +3840,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
                     string Original_AdminPhone, 
                     int Original_AdminLogType, 
                     string Original_AdminGuid, 
+                    global::System.Nullable<long> Original_AdminChatId, 
                     int AdminID) {
             if ((AdminName == null)) {
                 throw new global::System.ArgumentNullException("AdminName");
@@ -3783,46 +3880,60 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             else {
                 this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(AdminGuid));
             }
-            this.Adapter.UpdateCommand.Parameters[8].Value = ((int)(Original_AdminID));
+            if ((AdminChatId.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((long)(AdminChatId.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(Original_AdminID));
             if ((Original_AdminName == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminName");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((string)(Original_AdminName));
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((string)(Original_AdminName));
             }
             if ((Original_AdminSurname == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminSurname");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((string)(Original_AdminSurname));
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((string)(Original_AdminSurname));
             }
             if ((Original_AdminLogin == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminLogin");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((string)(Original_AdminLogin));
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(Original_AdminLogin));
             }
             if ((Original_AdminPassword == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminPassword");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(Original_AdminPassword));
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((string)(Original_AdminPassword));
             }
-            this.Adapter.UpdateCommand.Parameters[13].Value = ((System.DateTime)(Original_AdminRegistrationDate));
+            this.Adapter.UpdateCommand.Parameters[14].Value = ((System.DateTime)(Original_AdminRegistrationDate));
             if ((Original_AdminPhone == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminPhone");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[14].Value = ((string)(Original_AdminPhone));
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((string)(Original_AdminPhone));
             }
-            this.Adapter.UpdateCommand.Parameters[15].Value = ((int)(Original_AdminLogType));
+            this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(Original_AdminLogType));
             if ((Original_AdminGuid == null)) {
                 throw new global::System.ArgumentNullException("Original_AdminGuid");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[16].Value = ((string)(Original_AdminGuid));
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((string)(Original_AdminGuid));
             }
-            this.Adapter.UpdateCommand.Parameters[17].Value = ((int)(AdminID));
+            if ((Original_AdminChatId.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((long)(Original_AdminChatId.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[19].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[20].Value = ((int)(AdminID));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -3852,6 +3963,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
                     string AdminPhone, 
                     int AdminLogType, 
                     string AdminGuid, 
+                    global::System.Nullable<long> AdminChatId, 
                     int Original_AdminID, 
                     string Original_AdminName, 
                     string Original_AdminSurname, 
@@ -3860,8 +3972,9 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
                     System.DateTime Original_AdminRegistrationDate, 
                     string Original_AdminPhone, 
                     int Original_AdminLogType, 
-                    string Original_AdminGuid) {
-            return this.Update(AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistrationDate, AdminPhone, AdminLogType, AdminGuid, Original_AdminID, Original_AdminName, Original_AdminSurname, Original_AdminLogin, Original_AdminPassword, Original_AdminRegistrationDate, Original_AdminPhone, Original_AdminLogType, Original_AdminGuid, Original_AdminID);
+                    string Original_AdminGuid, 
+                    global::System.Nullable<long> Original_AdminChatId) {
+            return this.Update(AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistrationDate, AdminPhone, AdminLogType, AdminGuid, AdminChatId, Original_AdminID, Original_AdminName, Original_AdminSurname, Original_AdminLogin, Original_AdminPassword, Original_AdminRegistrationDate, Original_AdminPhone, Original_AdminLogType, Original_AdminGuid, Original_AdminChatId, Original_AdminID);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3893,7 +4006,7 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
         public virtual int UpdateAdmin(string AdminName, string AdminSurname, string AdminLogin, string AdminPassword, string AdminPhone, int AdminLogType, int Original_AdminID) {
-            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[5];
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[6];
             if ((AdminName == null)) {
                 throw new global::System.ArgumentNullException("AdminName");
             }
@@ -3926,6 +4039,36 @@ SELECT AdminID, AdminName, AdminSurname, AdminLogin, AdminPassword, AdminRegistr
             }
             command.Parameters[5].Value = ((int)(AdminLogType));
             command.Parameters[6].Value = ((int)(Original_AdminID));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
+        public virtual int UpdateChatId(global::System.Nullable<long> AdminChatId, int AdminID) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[7];
+            if ((AdminChatId.HasValue == true)) {
+                command.Parameters[0].Value = ((long)(AdminChatId.Value));
+            }
+            else {
+                command.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            command.Parameters[1].Value = ((int)(AdminID));
             global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
             if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {

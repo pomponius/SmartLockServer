@@ -137,7 +137,7 @@ namespace SmartLock
             if (mynewadmin.admin_logerror == 1)
                 log += 4;
 
-            myAdmin.Insert(mynewadmin.admin_name, mynewadmin.admin_surname, mynewadmin.admin_login, mynewadmin.admin_password, DateTime.Now, mynewadmin.admin_phone, log, Guid.NewGuid().ToString());
+            myAdmin.Insert(mynewadmin.admin_name, mynewadmin.admin_surname, mynewadmin.admin_login, mynewadmin.admin_password, DateTime.Now, mynewadmin.admin_phone, log, Guid.NewGuid().ToString(), null);
 
             myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " created a new admin " + mynewadmin.admin_name + " " + mynewadmin.admin_surname, DateTime.Now, 2, 0);
 
@@ -253,6 +253,40 @@ namespace SmartLock
 
             return "OK!";
         }
+
+        public static string BotUpdateAsync(string token, string enable, UserIdentity myUserIdentity)
+        {
+            string[] lines = { token, enable };
+            string name="unknown";
+
+            if (token != "")
+            {
+                try
+                {
+                    Telegram.Bot.TelegramBotClient Bot = new Telegram.Bot.TelegramBotClient(token);
+                    var me = Bot.GetMeAsync();
+                    name = me.Result.FirstName;
+                }
+                catch (Exception e)
+                {
+                    if (e.InnerException == null)
+                        return e.Message;
+                    return e.InnerException.Message;
+                }
+            }
+            
+            System.IO.File.WriteAllLines("BotTelegram.txt", lines);
+
+            int en = Int32.Parse(enable);
+            string ens = "disabled";
+
+            if (en == 1)
+                ens = "enabled";
+            myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Admin " + myUserIdentity.AdminData.AdminName + " " + myUserIdentity.AdminData.AdminSurname + " updated Telegram Bot configuration (Now: " + ens + "; Bot name: "+ name + ")", DateTime.Now, 2, 0);
+
+            return "OK!";
+        }
+
 
 
         public static Guid? ValidateUser(string username, string password)

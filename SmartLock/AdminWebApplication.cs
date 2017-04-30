@@ -274,7 +274,7 @@ namespace SmartLock
                 {
                     foreach (SmartLockDatabaseDataSet.Table_AdminRow adminRow in myAdminList)
                     {
-                        myAdminListBuilder.Add(new AdminAdminModel { admin_id = adminRow.AdminID, admin_name = adminRow.AdminName, admin_surname = adminRow.AdminSurname, admin_login = adminRow.AdminLogin, admin_registrationdate = adminRow.AdminRegistrationDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), admin_phone = adminRow.AdminPhone, admin_loginfo = ((adminRow.AdminLogType / 2) % 2), admin_logaccess = (adminRow.AdminLogType % 2), admin_logerror = ((adminRow.AdminLogType / 4) % 2), admin_password = ((myUserIdentity.AdminData.AdminID == adminRow.AdminID)? adminRow.AdminPassword : null) });
+                        myAdminListBuilder.Add(new AdminAdminModel { admin_id = adminRow.AdminID, admin_name = adminRow.AdminName, admin_surname = adminRow.AdminSurname, admin_login = adminRow.AdminLogin, admin_registrationdate = adminRow.AdminRegistrationDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture), admin_phone = adminRow.AdminPhone, admin_loginfo = ((adminRow.AdminLogType / 2) % 2), admin_logaccess = (adminRow.AdminLogType % 2), admin_logerror = ((adminRow.AdminLogType / 4) % 2), admin_password = ((myUserIdentity.AdminData.AdminID == adminRow.AdminID)? adminRow.AdminPassword : null), admin_logservicestate=((adminRow.IsAdminChatIdNull())?0:1)});
                     }
                 }
 
@@ -369,6 +369,27 @@ namespace SmartLock
                 string result = AdminDatabase.DeleteLogs(myLogListModel, myUserIdentity);
 
                 return result;
+            };
+
+            Get["api/bot/"] = args => {
+                this.RequiresAuthentication();
+
+                string[] lines = System.IO.File.ReadAllLines("BotTelegram.txt");
+
+                Response response = Response.AsJson(new AdminBotModel { token = lines[0], enable = Int32.Parse(lines[1]) });
+                response.ContentType = "application/json";
+                return response;
+            };
+
+            Post["api/bot/"] = args =>
+            {
+                this.RequiresAuthentication();
+
+                UserIdentity myUserIdentity = (UserIdentity)this.Context.CurrentUser;
+
+                string a = AdminDatabase.BotUpdateAsync(this.Request.Query["token"], this.Request.Query["enable"], myUserIdentity);
+
+                return a;
             };
 
         }

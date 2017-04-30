@@ -119,6 +119,13 @@
 							}
 							return retstring;
 						}
+					},
+					{ data: function ( row, type, val, meta ) {
+							if(row.admin_logservicestate==1){
+								return '<span class="glyphicon glyphicon-ok" style="color:#00FF00;"></span>Active';
+							}
+							return '<span class="glyphicon glyphicon-remove" style="color:#FF0000;"></span>Off';
+						}
 					}
 				],
 				select: {
@@ -353,6 +360,7 @@
 							<th>Registration Date</th>
 							<th>Phone</th>
 							<th>Logs Type Notification</th>
+							<th>Telegram Bot</th>
 						</tr>
 					</thead>
 					<tfoot>
@@ -363,6 +371,7 @@
 							<th>Registration Date</th>
 							<th>Phone</th>
 							<th>Logs Type Notification</th>
+							<th>Telegram Bot</th>
 						</tr>
 					</tfoot>
 				</table>

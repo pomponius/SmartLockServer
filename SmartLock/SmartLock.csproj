@@ -103,6 +103,7 @@
     <Compile Include="FormsAuthBootstrapper.cs" />
     <Compile Include="ISmartLockRESTService.cs" />
     <Compile Include="Models\AdminAdminModel.cs" />
+    <Compile Include="Models\AdminBotModel.cs" />
     <Compile Include="Models\AdminLockModel.cs" />
     <Compile Include="Models\AdminLogModel.cs" />
     <Compile Include="Models\AdminModel.cs" />
@@ -167,6 +168,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BotTelegram\BotTelegram.txt" />
     <Content Include="SmartLockDatabase.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -197,6 +199,8 @@
     <Error Condition="!Exists('..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)Views" "$(ProjectDir)$(OutDir)views" /Y /I /E</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)Views" "$(ProjectDir)$(OutDir)views" /Y /I /E
+xcopy "$(ProjectDir)BotTelegram" "$(ProjectDir)$(OutDir)" /Y /I /E
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
