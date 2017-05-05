@@ -20,10 +20,10 @@ namespace SmartLock
 {
     public partial class Form1 : Form
     {
-        SmartLockDatabaseDataSet myDataSet = new SmartLockDatabaseDataSet();
-        SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
-        SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
-        SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
+        SmartLockDatabaseDataSet myDataSet;
+        SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter myAdmin;
+        SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter myLogs;
+        SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter myLocks;
         Thread logThread;
         Thread checkLocksThread;
         List<int[]> errorLocks = new List<int[]>();
@@ -31,6 +31,7 @@ namespace SmartLock
 
         Telegram.Bot.TelegramBotClient Bot;
         int BotEnabled = 0;
+        int BotErrorSegnalated = 0;
 
 
         public Form1()
@@ -38,8 +39,36 @@ namespace SmartLock
             InitializeComponent();
             this.FormClosing += new FormClosingEventHandler(Form1_Closing);
 
-            myAdmin.Fill(myDataSet.Table_Admin);
-            myLogs.Fill(myDataSet.Table_Log);
+            Console.WriteLine("Hello!");
+            myDataSet = new SmartLockDatabaseDataSet();
+            //while (!myDataSet.IsInitialized) ;
+            myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
+            myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
+            myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
+            //myDataSet.
+            //var connection = new System.Data.SqlClient.SqlConnection((string) SmartLock.Properties.Settings.Default["SmartLockDatabaseConnectionString"]);
+            //if(connection.State== ConnectionState.Closed)
+            //{
+            //Console.WriteLine("Connection string1: "+connection.State);
+            //}
+
+            if (!TryDatabaseConnection())
+            {
+                SmartLock.Properties.Settings.Default["SmartLockDatabaseConnectionString"] = "Data Source=(localdb)\\v13.0;AttachDbFilename=|DataDirectory|\\SmartLockDatabase.mdf;Integrated Security=True";
+                myDataSet = new SmartLockDatabaseDataSet();
+                //while (!myDataSet.IsInitialized) ;
+                myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
+                myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
+                myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
+                if (!TryDatabaseConnection())
+                {
+                    MessageBox.Show("I cannot connect to the database", "SmartLock", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Environment.Exit(1);
+                }
+            }
+            
+
+
 
             int? lSeenLog = myLogs.GetMaxLogID();
             if(lSeenLog == null)
@@ -70,21 +99,28 @@ namespace SmartLock
 
         }
 
+        private bool TryDatabaseConnection() {
+            try
+            {
+               
+                myAdmin.Fill(myDataSet.Table_Admin);
+                myLogs.Fill(myDataSet.Table_Log);
+                return true;
+            }
+            catch (Exception e)
+            {
+                
+            }
+            return false;
+        }
+
 
         private async void updateTextBoxWithLogs()
         {
-            string[] lines = System.IO.File.ReadAllLines("BotTelegram.txt");
+            string[] lines = { "", "" };
+            Telegram.Bot.Types.User me = null;
 
-            BotEnabled = Int32.Parse(lines[1]);
-            if (BotEnabled==1)
-            {
-                Bot = new Telegram.Bot.TelegramBotClient(lines[0]);
-            }
-            var me = await Bot.GetMeAsync();
-            System.Console.WriteLine("Hello my name is " + me.FirstName);
             var botoffset = 0;
-
-
             
             while (true)
                 {
@@ -94,53 +130,69 @@ namespace SmartLock
                 BotEnabled = Int32.Parse(newlines[1]);
                 if (BotEnabled == 1)
                 {
-                    if (newlines[0] != lines[0])
+                    try
                     {
-                        lines[0] = newlines[0];
-                        Bot = new Telegram.Bot.TelegramBotClient(lines[0]);
-                    }
-                }
-
-                if (BotEnabled == 1)
-                {
-                    var updates = await Bot.GetUpdatesAsync(botoffset);
-                    foreach (var update in updates)
-                    {
-                        switch (update.Type)
+                        if (newlines[0] != lines[0])
                         {
-                            case Telegram.Bot.Types.Enums.UpdateType.MessageUpdate:
-                                var message = update.Message;
+                            System.Console.WriteLine("Updating Bot Token");
+                            lines[0] = newlines[0];
+                            Bot = new Telegram.Bot.TelegramBotClient(lines[0]);
 
-                                switch (message.Type)
-                                {
-                                    case Telegram.Bot.Types.Enums.MessageType.TextMessage:
-
-                                        if (message.Text == "/start")
-                                        {
-                                            var rkm = new ReplyKeyboardMarkup(new KeyboardButton[] { new KeyboardButton("Send Phone Number") { RequestContact = true } }, true, true);
-                                            await Bot.SendTextMessageAsync(message.Chat.Id, "Hello! I'm " + me.FirstName + ".\nSend your contact in order to register on the system", replyToMessageId: message.MessageId, replyMarkup: rkm);
-                                        }
-                                        break;
-                                    case Telegram.Bot.Types.Enums.MessageType.ContactMessage:
-                                        EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> madmins = myAdmin.GetDataByPhoneNumber("+" + message.Contact.PhoneNumber).AsEnumerable();
-                                        if (madmins == null)
-                                        {
-                                            await Bot.SendTextMessageAsync(message.Chat.Id, "I didn't find your number");
-                                            break;
-                                        }
-                                        if (madmins.Count() == 0)
-                                        {
-                                            await Bot.SendTextMessageAsync(message.Chat.Id, "I didn't find your number");
-                                            break;
-                                        }
-                                        Console.WriteLine("Contact Received: " + message.Contact.PhoneNumber);
-                                        myAdmin.UpdateChatId(message.Chat.Id, madmins.ElementAt(0).AdminID);
-                                        await Bot.SendTextMessageAsync(message.Chat.Id, "I've received your account, now you will receive the selected logs");
-                                        break;
-                                }
-                                break;
+                            me = await Bot.GetMeAsync();
+                            System.Console.WriteLine("Hello my name is " + me.FirstName);
+                        
                         }
-                        botoffset = update.Id + 1;
+                        var updates = await Bot.GetUpdatesAsync(botoffset);
+                        foreach (var update in updates)
+                        {
+                            switch (update.Type)
+                            {
+                                case Telegram.Bot.Types.Enums.UpdateType.MessageUpdate:
+                                    var message = update.Message;
+
+                                    switch (message.Type)
+                                    {
+                                        case Telegram.Bot.Types.Enums.MessageType.TextMessage:
+
+                                            if (message.Text == "/start")
+                                            {
+                                                var rkm = new ReplyKeyboardMarkup(new KeyboardButton[] { new KeyboardButton("Send Phone Number") { RequestContact = true } }, true, true);
+                                                await Bot.SendTextMessageAsync(message.Chat.Id, "Hello! I'm " + me.FirstName + ".\nSend your contact in order to register on the system", replyToMessageId: message.MessageId, replyMarkup: rkm);
+                                            }
+                                            if (message.Text == "/stop")
+                                            {
+                                                myAdmin.UpdateChatIdByChatId(null, message.Chat.Id);
+                                                await Bot.SendTextMessageAsync(message.Chat.Id, "I've removed your registration", replyToMessageId: message.MessageId);
+                                            }
+                                            break;
+                                        case Telegram.Bot.Types.Enums.MessageType.ContactMessage:
+                                            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_AdminRow> madmins = myAdmin.GetDataByPhoneNumber("+" + message.Contact.PhoneNumber).AsEnumerable();
+                                            if (madmins == null)
+                                            {
+                                                await Bot.SendTextMessageAsync(message.Chat.Id, "I didn't find your number");
+                                                break;
+                                            }
+                                            if (madmins.Count() == 0)
+                                            {
+                                                await Bot.SendTextMessageAsync(message.Chat.Id, "I didn't find your number");
+                                                break;
+                                            }
+                                            Console.WriteLine("Contact Received: " + message.Contact.PhoneNumber);
+                                            myAdmin.UpdateChatId(message.Chat.Id, madmins.ElementAt(0).AdminID);
+                                            await Bot.SendTextMessageAsync(message.Chat.Id, "I've received your account, now you will receive the selected logs");
+                                            break;
+                                    }
+                                    break;
+                            }
+                            botoffset = update.Id + 1;
+                        }
+                        BotErrorSegnalated = 0;
+                    }
+                    catch (Exception e)
+                    {
+                        if(BotErrorSegnalated==0)
+                            myLogs.Insert("[System: Error] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Cannot connect to Telegram", DateTime.Now, 4, 0);
+                        BotErrorSegnalated = 1;
                     }
                 }
 
@@ -184,6 +236,7 @@ namespace SmartLock
                                     try
                                     {
                                         await Bot.SendTextMessageAsync(myadmin.AdminChatId, mlog.LogText);
+                                        BotErrorSegnalated = 0;
                                     }
                                     catch (Telegram.Bot.Exceptions.ApiRequestException e)
                                     {
@@ -192,6 +245,11 @@ namespace SmartLock
                                             myAdmin.UpdateChatId(null, myadmin.AdminID);
                                             System.Console.WriteLine("chat id deleted");
                                         }
+                                    }
+                                    catch (Exception e) {
+                                        if (BotErrorSegnalated == 0)
+                                            myLogs.Insert("[System: Error] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") Cannot connect to Telegram", DateTime.Now, 4, 0);
+                                        BotErrorSegnalated = 1;
                                     }
                                 }
                             }
