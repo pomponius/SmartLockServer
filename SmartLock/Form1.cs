@@ -38,25 +38,34 @@ namespace SmartLock
         {
             InitializeComponent();
             this.FormClosing += new FormClosingEventHandler(Form1_Closing);
+            //this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
+            
 
+
+        }
+
+        private void Form1_Shown(object sender, System.EventArgs e)
+        //private void Form1_Load(object sender, System.EventArgs e)
+        //protected override void OnLoad(EventArgs e)
+        {
+            this.Refresh();
             Console.WriteLine("Hello!");
+            textBox1.AppendText("Form loaded...");
+            textBox1.AppendText(Environment.NewLine);
+
+            textBox1.AppendText("Connecting to the database...");
+            textBox1.AppendText(Environment.NewLine);
+
             myDataSet = new SmartLockDatabaseDataSet();
-            //while (!myDataSet.IsInitialized) ;
             myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
             myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
             myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
-            //myDataSet.
-            //var connection = new System.Data.SqlClient.SqlConnection((string) SmartLock.Properties.Settings.Default["SmartLockDatabaseConnectionString"]);
-            //if(connection.State== ConnectionState.Closed)
-            //{
-            //Console.WriteLine("Connection string1: "+connection.State);
-            //}
 
             if (!TryDatabaseConnection())
             {
                 SmartLock.Properties.Settings.Default["SmartLockDatabaseConnectionString"] = "Data Source=(localdb)\\v13.0;AttachDbFilename=|DataDirectory|\\SmartLockDatabase.mdf;Integrated Security=True";
                 myDataSet = new SmartLockDatabaseDataSet();
-                //while (!myDataSet.IsInitialized) ;
                 myAdmin = new SmartLockDatabaseDataSetTableAdapters.Table_AdminTableAdapter();
                 myLogs = new SmartLockDatabaseDataSetTableAdapters.Table_LogTableAdapter();
                 myLocks = new SmartLockDatabaseDataSetTableAdapters.Table_LocksTableAdapter();
@@ -66,26 +75,32 @@ namespace SmartLock
                     System.Environment.Exit(1);
                 }
             }
-            
 
-
+            textBox1.AppendText("Connected to the database!");
+            textBox1.AppendText(Environment.NewLine);
 
             int? lSeenLog = myLogs.GetMaxLogID();
-            if(lSeenLog == null)
+            if (lSeenLog == null)
                 lastSeenLog = 0;
             else
                 lastSeenLog = lSeenLog.Value;
 
-            
 
+            textBox1.AppendText("Starting REST service...");
+            textBox1.AppendText(Environment.NewLine);
             SmartLockRESTService myRESTService = new SmartLockRESTService();
             WebServiceHost _serviceHost = new WebServiceHost(myRESTService, new Uri("http://localhost:8000/SmartLockRESTService"));
             _serviceHost.Open();
+            textBox1.AppendText("REST service started!");
+            textBox1.AppendText(Environment.NewLine);
 
-
+            textBox1.AppendText("Starting Web Host service...");
+            textBox1.AppendText(Environment.NewLine);
             WebServiceHost myWebHost = new WebServiceHost(new NancyWcfGenericService(), new Uri("http://localhost"));
             myWebHost.AddServiceEndpoint(typeof(NancyWcfGenericService), new WebHttpBinding(), "");
             myWebHost.Open();
+            textBox1.AppendText("Web Host service started!");
+            textBox1.AppendText(Environment.NewLine);
 
 
             logThread = new Thread(updateTextBoxWithLogs);
@@ -96,7 +111,7 @@ namespace SmartLock
 
             myLogs.Insert("[System: Info] (" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture) + ") System Started!", DateTime.Now, 2, 0);
 
-
+            //base.OnLoad(e);
         }
 
         private bool TryDatabaseConnection() {
