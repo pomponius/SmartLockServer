@@ -4302,7 +4302,7 @@ SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log WHERE (LogID =
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[4];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[5];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log";
@@ -4319,8 +4319,12 @@ SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log WHERE (LogID =
             this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "LogID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[3] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[3].Connection = this.Connection;
-            this._commandCollection[3].CommandText = "SELECT        MAX(LogID) AS LogMax\r\nFROM            Table_Log";
+            this._commandCollection[3].CommandText = "SELECT TOP 100 * FROM Table_Log ORDER BY LogID DESC";
             this._commandCollection[3].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[4] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[4].Connection = this.Connection;
+            this._commandCollection[4].CommandText = "SELECT        MAX(LogID) AS LogMax\r\nFROM            Table_Log";
+            this._commandCollection[4].CommandType = global::System.Data.CommandType.Text;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4368,6 +4372,17 @@ SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log WHERE (LogID =
         public virtual SmartLockDatabaseDataSet.Table_LogDataTable GetLogsHigherThan(int ID) {
             this.Adapter.SelectCommand = this.CommandCollection[2];
             this.Adapter.SelectCommand.Parameters[0].Value = ((int)(ID));
+            SmartLockDatabaseDataSet.Table_LogDataTable dataTable = new SmartLockDatabaseDataSet.Table_LogDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual SmartLockDatabaseDataSet.Table_LogDataTable GetLast100() {
+            this.Adapter.SelectCommand = this.CommandCollection[3];
             SmartLockDatabaseDataSet.Table_LogDataTable dataTable = new SmartLockDatabaseDataSet.Table_LogDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -4528,7 +4543,7 @@ SELECT LogID, LogText, LogDate, LogType, LogLockID FROM Table_Log WHERE (LogID =
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         public virtual global::System.Nullable<int> GetMaxLogID() {
-            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[3];
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[4];
             global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
             if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {

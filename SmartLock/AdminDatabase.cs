@@ -60,7 +60,7 @@ namespace SmartLock
 
         public static EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> getLogs()
         {
-            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> myLogList = myLogs.GetData().AsEnumerable();
+            EnumerableRowCollection<SmartLockDatabaseDataSet.Table_LogRow> myLogList = myLogs.GetLast100().AsEnumerable();
             if (myLogList == null)
                 return null;
             if (myLogList.Count() == 0)
